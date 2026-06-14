@@ -16,7 +16,7 @@
 </head>
 <body>
 <h1>PrimeGadget EU — stav projektu</h1>
-<p class="meta"><strong>Poslední aktualizace:</strong> 14. 6. 2026 16:47:39 (Europe/Prague)</p>
+<p class="meta"><strong>Poslední aktualizace:</strong> 15. 6. 2026 1:47:30 (Europe/Prague)</p>
 <pre>## PRVNÍ KROK KAŽDÉ SESSION
 Než cokoliv uděláš, vždy nejdřív stáhni aktuální stav z GitHubu:
   git pull origin main
@@ -106,6 +106,14 @@ Když najdu a opravím jakoukoliv chybu, NIKDY neskončím u pouhé opravy. Vžd
 4. **Ověřím** opravu (test / build / smoke-test)
 5. Pokud šlo o skript/hook/config → **zazálohuji do repa** (ne jen lokálně)
 6. **Commit + push** na GitHub
+
+### 7. Carousel / promo bannery — obsah VŽDY celý uvnitř plochy (mobil i desktop)
+Slidy karuselu (`src/components/home/PromoCarousel.tsx`, `PS5PromoBanner.tsx`, `DronePromoBanner.tsx`) musí mít **veškerý obsah celý vidět uvnitř plochy na VŠECH šířkách** — nic se nesmí ořezávat ani přetékat za levý/pravý/horní/dolní okraj.
+- **Výšku/poměr řeš JEDNOTNĚ na jednom místě** (viewport v `PromoCarousel`), ne v každém slidu zvlášť — ať se chyba nemůže vrátit u jednoho slidu.
+- Poměr **5/2 jen na sm+** (široká obrazovka). Na **mobilu pevná vyšší výška**, aby se vešel obsah PS5 i celý obrázek dronu.
+- Obrázek dronu (1600×640, vypálený text) **NEOŘEZÁVAT**: mobil `object-contain` na žlutém pozadí, sm+ `object-cover`.
+- Texty/tlačítka **responsivně zmenšovat** na mobilu.
+- **VŽDY ověřit na mobilní šířce (~375 px) i desktopu (~1440 px), oba slidy** — headless Edge screenshotem (viz [[pred-ui-zmenou-overit-regrese]]).
 
 ---
 
