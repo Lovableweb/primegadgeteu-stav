@@ -16,7 +16,7 @@
 </head>
 <body>
 <h1>PrimeGadget EU — stav projektu</h1>
-<p class="meta"><strong>Poslední aktualizace:</strong> 14. 6. 2026 16:41:01 (Europe/Prague)</p>
+<p class="meta"><strong>Poslední aktualizace:</strong> 14. 6. 2026 16:44:32 (Europe/Prague)</p>
 <pre>## PRVNÍ KROK KAŽDÉ SESSION
 Než cokoliv uděláš, vždy nejdřív stáhni aktuální stav z GitHubu:
   git pull origin main
@@ -39,12 +39,13 @@ ID gistu je uložené v `.claude/sync-gist.txt`. Toto už dělá automaticky hoo
 
 ## VEŘEJNÁ WEBOVÁ STRÁNKA (GitHub Pages) — REGENEROVAT PO KAŽDÉ ZMĚNĚ
 Obsah `CLAUDE.md` je publikovaný i jako veřejná webová stránka přes GitHub Pages (dohledatelná vyhledávačem, čitelná z mobilu):
-- **Adresa:** https://lovableweb.github.io/primegadgeteu/stav/
-- **Zdroj stránky:** `stav/index.html` se generuje z `CLAUDE.md` skriptem `scripts/gen-stav-page.cjs`.
-Po KAŽDÉ změně `CLAUDE.md` je nutné stránku přegenerovat, commitnout a pushnout:
-  node scripts/gen-stav-page.cjs .
-  git add CLAUDE.md stav/index.html &amp;&amp; git commit -m "docs: aktualizace" &amp;&amp; git push origin main
-Toto už dělá automaticky hook `.claude/hooks/push-claude-md.sh`. Stránka je VEŘEJNÁ → stejné pravidlo: žádné citlivé údaje v `CLAUDE.md`.
+- **Adresa:** https://lovableweb.github.io/primegadgeteu-stav/
+- **Hlavní repo `primegadgeteu` zůstává PRIVÁTNÍ.** Stránka je v SAMOSTATNÉM veřejném repu `Lovableweb/primegadgeteu-stav` (jen `index.html`), naklonovaném lokálně v `../primegadgeteu-stav`. Důvod: Pages na free plánu jdou jen na veřejných repech, a hlavní kód + Supabase migrace (admin email) nesmí být veřejné.
+- **Generování:** `scripts/gen-stav-page.cjs` vyrobí `index.html` z `CLAUDE.md`.
+Po KAŽDÉ změně `CLAUDE.md` se stránka přegeneruje a pushne do veřejného repa:
+  node scripts/gen-stav-page.cjs . ../primegadgeteu-stav/index.html
+  git -C ../primegadgeteu-stav commit -am "stránka: aktualizace" &amp;&amp; git -C ../primegadgeteu-stav push
+Toto už dělá automaticky hook `.claude/hooks/push-claude-md.sh`. Stránka je VEŘEJNÁ → žádné citlivé údaje v `CLAUDE.md`.
 
 ---
 
