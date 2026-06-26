@@ -16,8 +16,11 @@
 </head>
 <body>
 <h1>PrimeGadget EU — stav projektu</h1>
-<p class="meta"><strong>Poslední aktualizace:</strong> 23. 6. 2026 0:27:48 (Europe/Prague)</p>
-<pre>## PRVNÍ KROK KAŽDÉ SESSION
+<p class="meta"><strong>Poslední aktualizace:</strong> 27. 6. 2026 0:37:35 (Europe/Prague)</p>
+<pre>## NEŽ ZAČNEŠ HLEDAT
+Vždy nejdřív zkontroluj sekci **MAPA PROJEKTU** níže. Když soubor v mapě je, jdi rovnou tam — neprocházej celý repo (šetří kredity). Když vytvoříš nový důležitý soubor, doplň ho do mapy.
+
+## PRVNÍ KROK KAŽDÉ SESSION
 Než cokoliv uděláš, vždy nejdřív stáhni aktuální stav z GitHubu:
   git pull origin main
 Pak si přečti soubor CLAUDE.md v kořeni projektu, ať víš, co se změnilo (i z mobilu). Teprve potom začni pracovat.
@@ -46,6 +49,93 @@ Po KAŽDÉ změně `CLAUDE.md` se stránka přegeneruje a pushne do veřejného 
   node scripts/gen-stav-page.cjs . ../primegadgeteu-stav/index.html
   git -C ../primegadgeteu-stav commit -am "stránka: aktualizace" &amp;&amp; git -C ../primegadgeteu-stav push
 Toto už dělá automaticky hook `.claude/hooks/push-claude-md.sh`. Stránka je VEŘEJNÁ → žádné citlivé údaje v `CLAUDE.md`.
+
+---
+
+## MAPA PROJEKTU
+Rychlá orientace, ať se neprochází celý repo. Cesty jsou od kořene (`src/...`). UI primitiva (`src/components/ui/**`) a čisté typy se neuvádějí.
+
+### Stránky (`src/pages/`)
+- `Index.tsx` — homepage (skládá hero/carousel, produktovou mřížku, tlačítko nahoru); sem pro úpravy domovské stránky.
+- `ProductDetail.tsx` — detail produktu (galerie, recenze, cena, do košíku).
+- `Checkout.tsx` — pokladna (adresa, doprava, slevový kód, platba); sem pro objednávkový formulář.
+- `CheckoutSuccess.tsx` / `CheckoutCancel.tsx` — návrat z platební brány.
+- `MyOrders.tsx` — moje objednávky (dokončit platbu, faktura, objednat znovu, recenze po doručení).
+- `Account.tsx` — účet zákazníka `/muj-ucet` (osobní údaje + doručovací adresa do `profiles`).
+- `Wishlist.tsx` — oblíbené (banner slev).
+- `Compare.tsx` — porovnání produktů.
+- `TechHub.tsx` — herní/gamifikační hub (`.techhub-root`, font Oxanium).
+- `TitanPath.tsx` — Titan Path XP/level systém (ze Supabase nákupů).
+- `TrackOrder.tsx` — sledování zásilky podle čísla.
+- `Affiliate.tsx` / `ResetPassword.tsx` — affiliate program / reset hesla.
+- `AdminDashboard.tsx` — admin (produkty, objednávky, reklamace, metriky).
+- `legal/*.tsx` — obchodní podmínky, GDPR, cookies, reklamace.
+- **Běžné úkoly → sem sáhni:** routing/nová stránka → `src/App.tsx`; úprava domovské stránky → `pages/Index.tsx`.
+
+### Komponenty homepage (`src/components/home/` + `layout/`)
+- `home/PromoCarousel.tsx` — karusel promo bannerů; **výška/poměr slidů se řeší JEN tady** (viewport).
+- `home/PS5PromoBanner.tsx` — slide PlayStation 5 (živý HTML text + ovladače).
+- `home/DronePromoBanner.tsx` — slide DJI drony (živý text + rychlostní čáry + blikající CTA).
+- `home/HeroBanners.tsx`, `home/VideoBanner.tsx`, `home/BestDealsVideoBanner.tsx` — hero a video bannery.
+- `home/HotDeals.tsx`, `home/VisitorCounter.tsx` — bloky homepage (akce, počítadlo návštěv).
+- `layout/Header.tsx` — hlavička (logo, hledání, košík, jazyk/měna, menu).
+- `layout/Footer.tsx`, `layout/MegaMenu.tsx`, `layout/UserMenu.tsx` — patička, kategorie, uživatelské menu.
+- `layout/CurrencySwitcher.tsx` + `src/context/LocalizationContext.tsx` — přepínač měn a kurzy/symboly/formát ceny.
+- `layout/LocaleSwitcher.tsx`, `layout/Clock.tsx`, `layout/RadioPlayer.tsx`, `layout/ServerStatus.tsx` — jazyk, hodiny, rádio, stav serveru.
+- **Běžné úkoly → sem sáhni:** úprava promo banneru → `home/PromoCarousel.tsx` + konkrétní slide (`PS5PromoBanner`/`DronePromoBanner`); měny → `layout/CurrencySwitcher.tsx` + `context/LocalizationContext.tsx`.
+
+### AI / chatbot „Gadget" (`src/components/ai/`)
+- `AIShowman.tsx` — hlavní chatbot widget (AKTIVNÍ verze); sem pro chování/UI chatbota.
+- `aiShowman/ChatView.tsx`, `ChatInput.tsx`, `constants.ts`, `useChatApi.ts`, `utils.ts` — vnitřní části aktivního chatbota (zprávy, vstup, marker `&lt;PRODUCTS&gt;` produktové karty).
+- `aiShowman/FaqView.tsx`, `TrackView.tsx` — FAQ a sledování zásilky v chatu.
+- `GadgetFace.tsx` — SVG obličej Gadgeta; `QuickReplies.tsx` — rychlé odpovědi/vtipy (14 jazyků).
+- `SalesBrainBot.tsx` — prodejní popup; `ProductQuiz.tsx` — kvíz doporučení produktu.
+- `ReclamationModal.tsx`, `EscalationModal.tsx` — reklamace/eskalace z chatu.
+- `ChatMessageList.tsx` — POZOR: mrtvá/stará verze, needituj (aktivní je `aiShowman/`).
+- `src/lib/offlineResponses.ts` — offline odpovědi 30+ kategorií; `src/lib/chatMemory.ts`, `chatbotActions.ts` — paměť a akce bota.
+- **Běžné úkoly → sem sáhni:** chování chatbota → `ai/AIShowman.tsx` + `ai/aiShowman/`; serverová logika → `supabase/functions/claude-chat/` nebo `ai-showman/`; offline texty → `lib/offlineResponses.ts`.
+
+### Tech Hub / gamifikace (`src/components/techhub/`)
+- `PlayerCard.tsx` — karta hráče (fotka, jméno, flip na statistiky, živý avatar).
+- `TiltCard.tsx` — CSS 3D náklon/flip wrapper.
+- `ArcadeTab.tsx` — záložka her; hry: `MemoryGame.tsx` (pexeso), `TechQuizGame.tsx` (kvíz), `SlotMachineGame.tsx` (automat), `GhostHuntGame.tsx` (lov duchů).
+- `SpinWheelTab.tsx` — kolo štěstí; `RewardShopTab.tsx` — obchod (mince → slevové kódy); `AvatarGiftsTab.tsx` — avatary/dárky.
+- `LeaderboardTab.tsx`, `SeasonalEventsTab.tsx`, `LootBoxCard/Modal.tsx`, `StreakBonusCard.tsx`, `MiningIndicator.tsx` — žebříček, eventy, loot boxy, série, těžba mincí.
+- Sdílené: `src/lib/walletLocal.ts` + `hooks/useLocalBalance.ts` (mince/XP localStorage), `hooks/useTechHub.ts`, `lib/playerProfile.ts`, `lib/titanXp.ts` + `hooks/useTitanPath.ts` (Titan Path ze Supabase).
+- **Běžné úkoly → sem sáhni:** nová hra → `techhub/ArcadeTab.tsx` + nová `*Game.tsx`; mince/odměny → `lib/walletLocal.ts` + `hooks/useLocalBalance.ts`; Titan XP z nákupů → `lib/titanXp.ts` + `hooks/useTitanPath.ts`.
+
+### Pokladna / objednávky / účet
+- `pages/Checkout.tsx` — formulář pokladny; `components/checkout/ZasilkovnaWidget.tsx` — výběr výdejního místa.
+- `components/cart/CartDrawer.tsx`, `CartProgressSection.tsx` + `src/context/CartContext.tsx` — košík a jeho stav.
+- `pages/MyOrders.tsx`, `pages/Account.tsx` — objednávky a účet (viz Stránky).
+- Hooky: `useProducts.ts`, `useAbandonedCart.ts`, `useWishlist.ts`, `useShipmentTracking.ts`.
+- **Běžné úkoly → sem sáhni:** platba → `supabase/functions/create-payment/` (Stripe) nebo `create-payment-comgate/`; výdejní místo → `checkout/ZasilkovnaWidget.tsx`; obsah košíku → `context/CartContext.tsx`.
+
+### Recenze (`src/components/reviews/`)
+- `ProductReviews.tsx` — výpis recenzí u produktu; `ReviewForm.tsx` — formulář; `ReviewCard.tsx` — karta recenze (odznak ověřeného nákupu); `StarRating.tsx` — hvězdičky.
+- `OrderItemReview.tsx` — hodnocení produktu z doručené objednávky (`verified_purchase`); `hooks/useReviews.ts`, `context/ReviewSummaryContext.tsx` — data a souhrn hvězd na kartách.
+- **Běžné úkoly → sem sáhni:** zobrazení/odeslání recenze → `reviews/` + `hooks/useReviews.ts`.
+
+### Edge Functions (`supabase/functions/`)
+- `claude-chat/` — backend chatbota přes Claude API (POZOR na `verify_jwt` vs publishable klíče); `ai-showman/` — starší/alternativní AI funkce.
+- `create-payment/` — Stripe platba; `create-payment-comgate/` — Comgate (CZ); `stripe-webhook/` — potvrzení platby.
+- `track-shipment/` — sledování zásilky; `generate-invoice/` — HTML faktura; `send-email/` — odchozí e-maily (Resend); `product-feed/` — feed pro Heureka/Google Shopping; `tts/` — text-to-speech.
+- **Běžné úkoly → sem sáhni:** platba → `create-payment*/`; e-maily → `send-email/`; faktura → `generate-invoice/`. Nasazení přes Supabase MCP na projekt `obujmjhlxbbsztfivros`.
+
+### Skripty / hooky (`scripts/`, `.claude/`)
+- `scripts/check-secrets.cjs` — sken staged souborů na tajemství (napojen v `.husky/pre-commit`).
+- `scripts/gen-stav-page.cjs` — generuje veřejnou stránku stavu z CLAUDE.md; `scripts/db-healthcheck.sql` — DB smoke-test.
+- `scripts/start-dev.bat` — spuštění dev serveru (localhost:8080).
+- `.claude/hooks/push-claude-md.sh` / `pull-claude-md.sh` — obousměrná synchronizace CLAUDE.md + gist + Pages; `.claude/sync-gist.txt` — ID gistu.
+- **Běžné úkoly → sem sáhni:** veřejná nástěnka → `scripts/gen-stav-page.cjs` + hook `push-claude-md.sh`; ochrana tajemství → `scripts/check-secrets.cjs`.
+
+### Sdílené lib / hooks / context (`src/lib/`, `src/hooks/`, `src/context/`)
+- Context: `CartContext.tsx` (košík), `AuthContext.tsx` (přihlášení), `LocalizationContext.tsx` (jazyk/měna), `ReviewSummaryContext.tsx` (souhrn recenzí).
+- `src/integrations/supabase/client.ts` — Supabase klient (jediné napojení na DB).
+- `src/i18n/translations.ts` — překlady 14 jazyků.
+- lib: `analytics.ts`/`pixelTracking.ts` (měření), `salesPsychology.ts`/`customerPsychology.ts`/`upsellEngine.ts` (konverze), `voiceTts.ts` (TTS), `productMapper.ts` (mapování produktů), `emailCommandSystem.ts`/`emailReportSystem.ts` (e-mailové akce).
+- hooks: `useProducts.ts`, `useWishlist.ts`, `useReviews.ts`, `useAdminProducts/Orders.ts`, `useNotifications.ts`/`useRealtimeNotifications.ts`, `useRecentlyViewed.ts`.
+- **Běžné úkoly → sem sáhni:** dotaz do DB → `integrations/supabase/client.ts` + příslušný `hooks/use*.ts`; překlad/jazyk → `i18n/translations.ts` + `context/LocalizationContext.tsx`.
 
 ---
 
@@ -160,6 +250,8 @@ Slidy karuselu (`src/components/home/PromoCarousel.tsx`, `PS5PromoBanner.tsx`, `
 - 2026-06-22 Bezpečnostní audit + guard proti commitu tajemství: Audit celého repa i git historie. **Aktuální kód čistý** — všechny Edge Functions čtou secrets přes `Deno.env.get('NAZEV')` (žádný hardcoded klíč), frontend používá jen veřejný `VITE_SUPABASE_PUBLISHABLE_KEY`/`ANON_KEY` (žádný service_role ve frontendu), `.env` je gitignored, trackovaný jen `.env.example` s placeholdery. **Nález v historii:** GitHub PAT byl kdysi v `DEPLOYMENT_*.md` (od initial commitu 28.4. do scrub commitu `ae76fa8` 30.5.) — z pracovní verze odstraněn, ale stále v git historii → token nutno **rotovat/revoknout** na GitHubu (řeší majitel účtu); případný přepis historie se NEDĚLAL (destruktivní, čeká na výslovné rozhodnutí). `.env` byl v historii jen s veřejnými Supabase anon klíči (nízké riziko). **Pojistka:** nový `scripts/check-secrets.cjs` napojený do `.husky/pre-commit` skenuje staged soubory na vzory (ghp_/github_pat_, sk_live/sk_test/rk_live/whsec_, re_, AIza, AKIA, Slack, PEM privátní klíče, Supabase service_role JWT) a commit zablokuje; ignoruje placeholdery a u Supabase JWT rozliší service_role (blokovat) vs anon (povolit). Obejití jen vědomě přes `SKIP_SECRET_CHECK=1`. Ověřeno testem (zachytil token/sk_live/service_role, propustil anon/placeholder).
 - 2026-06-22 Veřejné zrcadlo re-synchronizováno + oprava hooku: gist i GitHub Pages stránka visely od 2026-06-15 01:47 na starém obsahu (regenerace se po commitech z 21.6 nespustila), ačkoliv lokální CLAUDE.md i privátní repo byly aktuální. Příčina: v `push-claude-md.sh` byla regenerace stránky/gistu schovaná za `git diff --cached --quiet … &amp;&amp; exit 0`, takže jakmile CLAUDE.md neměl čerstvý staged diff, skript skončil dřív a mirror se nikdy nedohnal. Oprava: commit je teď podmíněný, ale stránka + gist se srovnávají VŽDY (self-healing). Mirror dotažen na aktuální stav. Pozn. k zápisům z 21.6: Tech Hub herní font je **Oxanium** (NE Orbitron — ten nemá latin-ext/české háčky); „LEGO banner slide“ zatím v kódu NENÍ (PromoCarousel má jen PS5 + DJI drony) — pokud se má přidat, je to samostatný úkol.
 - 2026-06-21 Balík vychytávek (7): (1) **Naposledy prohlížené** – `useRecentlyViewed.ts` + `RecentlyViewed.tsx`, tracking v `ProductDetail`, pás na homepage i detailu. (2) **Souhrn recenzí na kartách** – `ReviewSummaryContext` (1 dotaz na všechny produkty) + hvězdičky v `ProductCard`; odznak „Ověřený nákup" už zobrazuje `ReviewCard`. (3) **Live „někdo právě koupil"** – `LiveSalesProof.tsx` (vlevo nahoře, nekoliduje s chatbotem/šipkou). (4) **Pokladna – předvyplnění z profilu** (`Checkout.tsx`, load `profiles`, remount formu přes `key`). (5) **Slevový kód v pokladně** napojený na Tech Hub kupóny (`pge_reward_coupons`): SHIP→doprava zdarma, PG5/PG10/PG15→% sleva; mění finalTotal. (6) **Hlídat naskladnění** – `BackInStock.tsx` u vyprodaných produktů; nová tabulka `stock_notifications` (anon insert, admin select; e-mail rozešle se až bude Resend). (7) **Slevy na oblíbených** – `Wishlist.tsx` banner „X ve slevě, ušetříš Y" + %/úspora u položek (klient-side, bez e-mailu).
+
+- 2026-06-27 Přidána **MAPA PROJEKTU** do CLAUDE.md (sekce hned pod startup pravidly) + pravidlo „NEŽ ZAČNEŠ HLEDAT" na začátku — rychlá orientace v souborech pro šetření kreditů v dalších session. Skupiny: stránky, homepage, AI/chatbot, Tech Hub, pokladna/objednávky/účet, recenze, Edge Functions, skripty/hooky, sdílené lib/hooks; ke každé „běžné úkoly → sem sáhni".
 
 ### Git workflow (Lovable se NEPOUŽÍVÁ):
 - **Lokální verze na disku = jediný zdroj pravdy**, pracuje se ve VS Code
