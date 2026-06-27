@@ -16,7 +16,7 @@
 </head>
 <body>
 <h1>PrimeGadget EU — stav projektu</h1>
-<p class="meta"><strong>Poslední aktualizace:</strong> 27. 6. 2026 0:37:35 (Europe/Prague)</p>
+<p class="meta"><strong>Poslední aktualizace:</strong> 27. 6. 2026 11:03:56 (Europe/Prague)</p>
 <pre>## NEŽ ZAČNEŠ HLEDAT
 Vždy nejdřív zkontroluj sekci **MAPA PROJEKTU** níže. Když soubor v mapě je, jdi rovnou tam — neprocházej celý repo (šetří kredity). Když vytvoříš nový důležitý soubor, doplň ho do mapy.
 
@@ -252,6 +252,7 @@ Slidy karuselu (`src/components/home/PromoCarousel.tsx`, `PS5PromoBanner.tsx`, `
 - 2026-06-21 Balík vychytávek (7): (1) **Naposledy prohlížené** – `useRecentlyViewed.ts` + `RecentlyViewed.tsx`, tracking v `ProductDetail`, pás na homepage i detailu. (2) **Souhrn recenzí na kartách** – `ReviewSummaryContext` (1 dotaz na všechny produkty) + hvězdičky v `ProductCard`; odznak „Ověřený nákup" už zobrazuje `ReviewCard`. (3) **Live „někdo právě koupil"** – `LiveSalesProof.tsx` (vlevo nahoře, nekoliduje s chatbotem/šipkou). (4) **Pokladna – předvyplnění z profilu** (`Checkout.tsx`, load `profiles`, remount formu přes `key`). (5) **Slevový kód v pokladně** napojený na Tech Hub kupóny (`pge_reward_coupons`): SHIP→doprava zdarma, PG5/PG10/PG15→% sleva; mění finalTotal. (6) **Hlídat naskladnění** – `BackInStock.tsx` u vyprodaných produktů; nová tabulka `stock_notifications` (anon insert, admin select; e-mail rozešle se až bude Resend). (7) **Slevy na oblíbených** – `Wishlist.tsx` banner „X ve slevě, ušetříš Y" + %/úspora u položek (klient-side, bez e-mailu).
 
 - 2026-06-27 Přidána **MAPA PROJEKTU** do CLAUDE.md (sekce hned pod startup pravidly) + pravidlo „NEŽ ZAČNEŠ HLEDAT" na začátku — rychlá orientace v souborech pro šetření kreditů v dalších session. Skupiny: stránky, homepage, AI/chatbot, Tech Hub, pokladna/objednávky/účet, recenze, Edge Functions, skripty/hooky, sdílené lib/hooks; ke každé „běžné úkoly → sem sáhni".
+- 2026-06-27 **Stripe platí ve zvolené měně + správná sleva a doprava** (`create-payment` v13 nasazena): `LocalizationContext` má novou `convertPrice()` (CZK → zvolená měna jako číslo). Checkout i MyOrders přepočítají položky do měny zákazníka a posílají `currency` do edge fce (DB zůstává v CZK). Opraveny dva latentní nesoulady u Stripe: (1) **sleva** (Titan + kupón) se teď rozpustí poměrově do cen položek (`discountFactor = afterCoupon/totalPrice`; v MyOrders `factor = total_price/sumaPoložek`), (2) **doprava** (59/99 Kč pod 1 500) jde do Stripe jako skutečná částka přes nové `shippingAmount`/`shippingLabel` (dřív natvrdo „Doprava zdarma, amount 0“) → součet ve Stripe přesně sedí s `finalTotal`. Měny v nabídce jsou všechny two-decimal, takže `*100` (nejmenší jednotka) sedí. `config.toml`: `verify_jwt=false` doplněn pro `create-payment`, `create-payment-comgate`, `stripe-webhook`. **Comgate beze změny** — je CZ-only brána, dostává `finalTotal` v CZK a posílá `curr:"CZK"` (správně). ⏳ Pozn.: platba reálně poběží až po doplnění `STRIPE_SECRET_KEY` do Supabase secrets. UX follow-up: u ne-CZK měny zvážit skrytí/poznámku u Comgate (zákazník vidí €, ale Comgate zaplatí ekvivalent v CZK).
 
 ### Git workflow (Lovable se NEPOUŽÍVÁ):
 - **Lokální verze na disku = jediný zdroj pravdy**, pracuje se ve VS Code
