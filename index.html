@@ -16,7 +16,7 @@
 </head>
 <body>
 <h1>PrimeGadget EU — stav projektu</h1>
-<p class="meta"><strong>Poslední aktualizace:</strong> 27. 6. 2026 11:03:56 (Europe/Prague)</p>
+<p class="meta"><strong>Poslední aktualizace:</strong> 27. 6. 2026 11:21:36 (Europe/Prague)</p>
 <pre>## NEŽ ZAČNEŠ HLEDAT
 Vždy nejdřív zkontroluj sekci **MAPA PROJEKTU** níže. Když soubor v mapě je, jdi rovnou tam — neprocházej celý repo (šetří kredity). Když vytvoříš nový důležitý soubor, doplň ho do mapy.
 
@@ -253,6 +253,7 @@ Slidy karuselu (`src/components/home/PromoCarousel.tsx`, `PS5PromoBanner.tsx`, `
 
 - 2026-06-27 Přidána **MAPA PROJEKTU** do CLAUDE.md (sekce hned pod startup pravidly) + pravidlo „NEŽ ZAČNEŠ HLEDAT" na začátku — rychlá orientace v souborech pro šetření kreditů v dalších session. Skupiny: stránky, homepage, AI/chatbot, Tech Hub, pokladna/objednávky/účet, recenze, Edge Functions, skripty/hooky, sdílené lib/hooks; ke každé „běžné úkoly → sem sáhni".
 - 2026-06-27 **Stripe platí ve zvolené měně + správná sleva a doprava** (`create-payment` v13 nasazena): `LocalizationContext` má novou `convertPrice()` (CZK → zvolená měna jako číslo). Checkout i MyOrders přepočítají položky do měny zákazníka a posílají `currency` do edge fce (DB zůstává v CZK). Opraveny dva latentní nesoulady u Stripe: (1) **sleva** (Titan + kupón) se teď rozpustí poměrově do cen položek (`discountFactor = afterCoupon/totalPrice`; v MyOrders `factor = total_price/sumaPoložek`), (2) **doprava** (59/99 Kč pod 1 500) jde do Stripe jako skutečná částka přes nové `shippingAmount`/`shippingLabel` (dřív natvrdo „Doprava zdarma, amount 0“) → součet ve Stripe přesně sedí s `finalTotal`. Měny v nabídce jsou všechny two-decimal, takže `*100` (nejmenší jednotka) sedí. `config.toml`: `verify_jwt=false` doplněn pro `create-payment`, `create-payment-comgate`, `stripe-webhook`. **Comgate beze změny** — je CZ-only brána, dostává `finalTotal` v CZK a posílá `curr:"CZK"` (správně). ⏳ Pozn.: platba reálně poběží až po doplnění `STRIPE_SECRET_KEY` do Supabase secrets. UX follow-up: u ne-CZK měny zvážit skrytí/poznámku u Comgate (zákazník vidí €, ale Comgate zaplatí ekvivalent v CZK).
+- 2026-06-27 **Dev server nikdy neběží dvakrát — vždy jen port 8080** (řešena PŘÍČINA, ne příznak): Vite má default `strictPort:false` → při obsazeném 8080 tiše skočil na 8081 (dvě instance = různá cache/verze mezi `:8080` a `:8081`). Oprava na třech místech: (1) `vite.config.ts` → `server.strictPort:true` — druhý `npm run dev` teď SPADNE s `Error: Port 8080 is already in use` místo skoku na 8081 (jasný signál „už běží"; ověřeno testem). (2) `scripts/start-dev.bat` → před startem `netstat -ano | findstr ":8080" | findstr "LISTENING"`; když port obsazený, vypíše česky „Dev server už běží… neotvírám druhý" a skončí. (3) `package.json` → nový script `dev:clean` = `node scripts/kill-port-8080.cjs &amp;&amp; vite` (tvrdý restart: skript přes netstat najde PID na 8080 a `taskkill /F`, pak čistý vite; když port volný, jen to oznámí). Nový soubor `scripts/kill-port-8080.cjs`. Pozn.: pokud 8080 spadne s chybou, NENÍ to bug — znamená to, že server už běží (otevři http://localhost:8080 nebo `npm run dev:clean`).
 
 ### Git workflow (Lovable se NEPOUŽÍVÁ):
 - **Lokální verze na disku = jediný zdroj pravdy**, pracuje se ve VS Code
