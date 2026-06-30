@@ -16,7 +16,7 @@
 </head>
 <body>
 <h1>PrimeGadget EU — stav projektu</h1>
-<p class="meta"><strong>Poslední aktualizace:</strong> 30. 6. 2026 22:10:55 (Europe/Prague)</p>
+<p class="meta"><strong>Poslední aktualizace:</strong> 30. 6. 2026 22:57:42 (Europe/Prague)</p>
 <pre>## NEŽ ZAČNEŠ HLEDAT
 Vždy nejdřív zkontroluj sekci **MAPA PROJEKTU** níže. Když soubor v mapě je, jdi rovnou tam — neprocházej celý repo (šetří kredity). Když vytvoříš nový důležitý soubor, doplň ho do mapy.
 
@@ -213,6 +213,12 @@ Slidy karuselu (`src/components/home/PromoCarousel.tsx`, `PS5PromoBanner.tsx`, `
 - **Drone banner je od 2026-06-21 ŽIVÝ** (HTML text, NE vypálený): obrázek `/drony-banner.webp` se ZÁMĚRNĚ ořezává tak, aby byla vidět jen pravá část s drony (vypálený text odříznut), levá strana = živý HTML text. Mobil: text nahoře / drony dole (img `w-[200%] object-right` → jen pravá polovina); sm+: text vlevo / drony vpravo (img `w-full object-right`). Okraje přelité do žluté (`#FBB816`). PS5 banner stále řeš dle potřeby.
 - Texty/tlačítka **responsivně zmenšovat** na mobilu.
 - **VŽDY ověřit na mobilní šířce (~375 px) i desktopu (~1440 px), oba slidy** — headless Edge screenshotem (viz [[pred-ui-zmenou-overit-regrese]]).
+
+### 9. Překlady — VŠE přes `t()`, vždy do všech 14 jazyků
+- **Žádný viditelný text napevno.** Každý nový text v UI (bannery, panely, tlačítka, aria-labely, hlášky) musí jít přes `t('klíč')` z `useLocalization`.
+- **Každý nový klíč přidej OKAMŽITĚ do všech 14 jazyků** v `src/i18n/translations.ts` (cs, en, de, fr, es, it, pl, sk, hu, ro, nl, pt, sv, da). Po přidání ověř `grep -c "'klíč'"` = 14.
+- **Ceny vždy přes `formatPrice()`** (z `useLocalization`), nikdy natvrdo „Kč" — jinak se měna nepřepíná.
+- Živé bannery (`PS5PromoBanner`, `DronePromoBanner`, `HeroBanners`) i pás dopravců (`ShippingBadges`) musí být plně přeložené.
 
 ### 8. Flip karty a plovoucí prvky vs. obsah
 - **Otáčecí (flip) karty** (např. `techhub/PlayerCard.tsx`): když mají přední a zadní strana různě vysoký obsah, výška kontejneru musí odpovídat **AKTUÁLNĚ zobrazené straně** — ne max obou (zbyde prázdná mezera u kratší strany), ani fixní (ořez). Řešení: obě strany `position:absolute` přes sebe + měřit výšku obsahu aktivní strany (`useLayoutEffect` + `ResizeObserver` na vnitřním divu) a nastavit výšku kontejneru, s `transition: height`. Kontejner měj tmavé pozadí, ať během přechodu neprosvítá bílá. Nezaměňuj s grid-stackingem (ten drží max výšku → mezera).
