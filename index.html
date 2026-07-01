@@ -16,7 +16,7 @@
 </head>
 <body>
 <h1>PrimeGadget EU — stav projektu</h1>
-<p class="meta"><strong>Poslední aktualizace:</strong> 30. 6. 2026 22:57:42 (Europe/Prague)</p>
+<p class="meta"><strong>Poslední aktualizace:</strong> 1. 7. 2026 22:10:06 (Europe/Prague)</p>
 <pre>## NEŽ ZAČNEŠ HLEDAT
 Vždy nejdřív zkontroluj sekci **MAPA PROJEKTU** níže. Když soubor v mapě je, jdi rovnou tam — neprocházej celý repo (šetří kredity). Když vytvoříš nový důležitý soubor, doplň ho do mapy.
 
@@ -219,6 +219,7 @@ Slidy karuselu (`src/components/home/PromoCarousel.tsx`, `PS5PromoBanner.tsx`, `
 - **Každý nový klíč přidej OKAMŽITĚ do všech 14 jazyků** v `src/i18n/translations.ts` (cs, en, de, fr, es, it, pl, sk, hu, ro, nl, pt, sv, da). Po přidání ověř `grep -c "'klíč'"` = 14.
 - **Ceny vždy přes `formatPrice()`** (z `useLocalization`), nikdy natvrdo „Kč" — jinak se měna nepřepíná.
 - Živé bannery (`PS5PromoBanner`, `DronePromoBanner`, `HeroBanners`) i pás dopravců (`ShippingBadges`) musí být plně přeložené.
+- **Pojistka:** `scripts/check-i18n.cjs` (v `.husky/pre-commit`) zablokuje commit, když do `.tsx` přidáš NOVÝ text napevno (JSX text nebo title/aria/placeholder/alt) s českou diakritikou. Kontroluje jen přidané řádky; allowlist: admin/legal/techhub-hry/i18n/data. Vědomé obejití: `SKIP_I18N_CHECK=1 git commit …`.
 
 ### 8. Flip karty a plovoucí prvky vs. obsah
 - **Otáčecí (flip) karty** (např. `techhub/PlayerCard.tsx`): když mají přední a zadní strana různě vysoký obsah, výška kontejneru musí odpovídat **AKTUÁLNĚ zobrazené straně** — ne max obou (zbyde prázdná mezera u kratší strany), ani fixní (ořez). Řešení: obě strany `position:absolute` přes sebe + měřit výšku obsahu aktivní strany (`useLayoutEffect` + `ResizeObserver` na vnitřním divu) a nastavit výšku kontejneru, s `transition: height`. Kontejner měj tmavé pozadí, ať během přechodu neprosvítá bílá. Nezaměňuj s grid-stackingem (ten drží max výšku → mezera).
