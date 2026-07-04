@@ -16,7 +16,7 @@
 </head>
 <body>
 <h1>PrimeGadget EU — stav projektu</h1>
-<p class="meta"><strong>Poslední aktualizace:</strong> 4. 7. 2026 19:50:14 (Europe/Prague)</p>
+<p class="meta"><strong>Poslední aktualizace:</strong> 4. 7. 2026 20:44:15 (Europe/Prague)</p>
 <pre>## NEŽ ZAČNEŠ HLEDAT
 Vždy nejdřív zkontroluj sekci **MAPA PROJEKTU** níže. Když soubor v mapě je, jdi rovnou tam — neprocházej celý repo (šetří kredity). Když vytvoříš nový důležitý soubor, doplň ho do mapy.
 
@@ -94,7 +94,7 @@ Rychlá orientace, ať se neprochází celý repo. Cesty jsou od kořene (`src/.
 
 ### AI / chatbot „Gadget" (`src/components/ai/`)
 - `AIShowman.tsx` — hlavní chatbot widget (AKTIVNÍ verze); sem pro chování/UI chatbota.
-- `aiShowman/ChatView.tsx`, `ChatInput.tsx`, `constants.ts`, `useChatApi.ts`, `utils.ts` — vnitřní části aktivního chatbota (zprávy, vstup, marker `&lt;PRODUCTS&gt;` produktové karty).
+- `aiShowman/ChatView.tsx`, `ChatInput.tsx`, `constants.ts`, `useChatApi.ts`, `utils.ts` — vnitřní části aktivního chatbota: `ChatView` (zprávy + přehrání zprávy hlasem), `ChatInput` (textarea + emoji picker + odeslání), marker `&lt;PRODUCTS&gt;` produktové karty.
 - `aiShowman/FaqView.tsx`, `TrackView.tsx` — FAQ a sledování zásilky v chatu.
 - `GadgetFace.tsx` — SVG obličej Gadgeta; `QuickReplies.tsx` — rychlé odpovědi/vtipy (14 jazyků).
 - `SalesBrainBot.tsx` — prodejní popup; `ProductQuiz.tsx` — kvíz doporučení produktu.
@@ -284,6 +284,7 @@ Slidy karuselu (`src/components/home/PromoCarousel.tsx`, `PS5PromoBanner.tsx`, `
 - Recenze produktů (`src/components/reviews/`)
 - Košík drawer bez blokujícího overlay
 - TTS: Microsoft Zuzana Online (Natural) pro CS
+- 2026-07-04 Chatbot Gadget — hlas per zprávu (žádné globální mute, ikona reproduktoru u každé bublinky bota přehraje/zastaví přes `voiceTts.ts`), emoji picker ve vstupu (`ChatInput.tsx`), placeholder tlačítko „živý hovor" (TODO: napojit realtime voice API, viz `PAMET_PROJEKTU.md`)
 - 2026-06-14 Test obousměrné synchronizace
 - 2026-06-14 Automatická obousměrná synchronizace CLAUDE.md zapnuta přes hooky (.claude/hooks/)
 - 2026-06-14 Nastaveno veřejné zrcadlo CLAUDE.md (gist)
