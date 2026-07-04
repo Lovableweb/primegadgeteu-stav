@@ -16,7 +16,7 @@
 </head>
 <body>
 <h1>PrimeGadget EU — stav projektu</h1>
-<p class="meta"><strong>Poslední aktualizace:</strong> 4. 7. 2026 18:32:04 (Europe/Prague)</p>
+<p class="meta"><strong>Poslední aktualizace:</strong> 4. 7. 2026 18:45:02 (Europe/Prague)</p>
 <pre>## NEŽ ZAČNEŠ HLEDAT
 Vždy nejdřív zkontroluj sekci **MAPA PROJEKTU** níže. Když soubor v mapě je, jdi rovnou tam — neprocházej celý repo (šetří kredity). Když vytvoříš nový důležitý soubor, doplň ho do mapy.
 
@@ -134,6 +134,7 @@ Rychlá orientace, ať se neprochází celý repo. Cesty jsou od kořene (`src/.
 ### Skripty / hooky (`scripts/`, `.claude/`)
 - `scripts/check-secrets.cjs` — sken staged souborů na tajemství (napojen v `.husky/pre-commit`).
 - `scripts/gen-stav-page.cjs` — generuje veřejnou stránku stavu z CLAUDE.md; `scripts/db-healthcheck.sql` — DB smoke-test.
+- `scripts/sync-mirror.sh` — kanonické srovnání veřejného zrcadla (Pages stránka + gist) s CLAUDE.md; volá ho git `pre-push` hook (`.husky/pre-push`) → běží při KAŽDÉM pushi nezávisle na CWD Claude Code (pojistka proti zaseknutému mirroru i při práci mimo složku projektu). Idempotentní, best-effort. Ruční spuštění: `sh scripts/sync-mirror.sh`.
 - `scripts/start-dev.bat` — spuštění dev serveru (localhost:8080).
 - `.claude/hooks/push-claude-md.sh` / `pull-claude-md.sh` — obousměrná synchronizace CLAUDE.md + gist + Pages; `.claude/sync-gist.txt` — ID gistu.
 - **Běžné úkoly → sem sáhni:** veřejná nástěnka → `scripts/gen-stav-page.cjs` + hook `push-claude-md.sh`; ochrana tajemství → `scripts/check-secrets.cjs`.
@@ -293,6 +294,7 @@ Slidy karuselu (`src/components/home/PromoCarousel.tsx`, `PS5PromoBanner.tsx`, `
 - 2026-07-04 **EU vlajka emoji v hero taglinu → 🌍** (`i18n/translations.ts`, `video.tagline` × 14 jazyků): Windows (Segoe UI Emoji) nerenderuje regionální vlajková emoji 🇪🇺 → ukazoval rozbitý fallback „ᴇᴜ". Zeměkoule 🌍 se renderuje korektně napříč platformami. Sken celého `src` na vlajková emoji (`\u{1F1E6}-\u{1F1FF}`) → jediný výskyt. Prevence: nová vlajková emoji v UI nepoužívat (na Windows se tříští), místo nich SVG ikony / neutrální emoji. Ověřeno headless screenshotem.
 - 2026-07-04 **Chatbot launcher: animovaná 3D mince místo statického avataru** (`src/components/ai/Coin3D.tsx`, `index.css`, `assets/gadget-coin-face.png`): plovoucí FAB chatbota (vpravo dole) má teď zlatou 3D minci s obličejem Gadgeta (13 zlatých vrstev = tloušťka, přední/zadní strana, škálování přes `size`). Animace `gc-sway`/`gc-nod`/`gc-bob`/`gc-sheen`, respektuje `prefers-reduced-motion`. Průhledné pozadí, úhly rotace zmírněny (±15°/±7°) a mince zvětšena na `size=106` v 96px kruhu s `overflow-hidden`, aby v náklonu nevznikaly boční mezery. Malý avatar v hlavičce chatu ponechán plochý (v 36 px by točící mince byla nečitelná). Ověřeno headless screenshotem.
 - 2026-07-04 **Tech Hub kompletně přeložen do 14 jazyků** (~230 klíčů × 14, ze zákaznických fotek, kde svítila čeština i při zvolené SK/PT): karta hráče + statistiky (`PlayerCard.tsx`, `th.*`), odznaky (`badge.*`) a mise (`mission.*`), záložky a rychlé akce (`TechHub.tsx`), herní aréna + názvy her (`ArcadeTab.tsx`, `game.*`), kolo štěstí (`SpinWheelTab.tsx`, `wheel.*`), obchod s odměnami (`RewardShopTab.tsx`, `shop.*` — kupón se ukládá s názvem v jazyce vytvoření), loot boxy (`LootBoxCard/Modal.tsx`, `useLootBox.ts`, `lootbox.*` — 5 tierů). Záměrně ponecháno CZ (interní/nízká priorita): popisy transakcí do localStorage/DB, edge-case error hlášky, `TechQuizGame` (64 otázek — dohodnuto nepřekládat), level tituly v `lib/titanXp.ts`, FEATURES v tabu „Funkce". ⏳ Zbývají PRODUKTY (`data/products.ts` — 50× název + popis) a kategorie/subkategorie.
+- 2026-07-04 **Veřejné zrcadlo se už nezasekne — git-level pojistka** (`scripts/sync-mirror.sh` + `.husky/pre-push`): PŘÍČINA dřívějšího zaseknutí („Poslední aktualizace" visela na 1.7., ač se pracovalo do 4.7.): regeneraci veřejné stránky + gistu spouštěly jen **Claude hooky** (`push-/pull-claude-md.sh`), které se načítají z `.claude/settings.json` PROJEKTU → běží POUZE když je Claude Code spuštěný ze složky projektu. Při práci z domovské složky (`C:\Users\jiris`) se nespustily a mirror zastaral. OPRAVA: kanonická self-healing logika vytažena do `scripts/sync-mirror.sh` (regeneruje stránku, porovná ignorujíc časové razítko `class="meta"`, pushne stránku + gist JEN při reálném obsahovém rozdílu; idempotentní, best-effort — nikdy nezablokuje push) a zavěšena na **git `pre-push` hook**, který běží při KAŽDÉM `git push` z repa **nezávisle na CWD Claude Code**. Kombinace teď pokrývá vše: práce ze složky → Claude hooky; práce odkudkoli → git pre-push. Ověřeno end-to-end (idempotence: bez změny obsahu nic nepushne jen kvůli timestampu; reálná změna CLAUDE.md → mirror sám srovnán při pushi).
 
 ### Git workflow (Lovable se NEPOUŽÍVÁ):
 - **Lokální verze na disku = jediný zdroj pravdy**, pracuje se ve VS Code
