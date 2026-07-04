@@ -16,7 +16,7 @@
 </head>
 <body>
 <h1>PrimeGadget EU — stav projektu</h1>
-<p class="meta"><strong>Poslední aktualizace:</strong> 4. 7. 2026 20:44:15 (Europe/Prague)</p>
+<p class="meta"><strong>Poslední aktualizace:</strong> 4. 7. 2026 21:42:48 (Europe/Prague)</p>
 <pre>## NEŽ ZAČNEŠ HLEDAT
 Vždy nejdřív zkontroluj sekci **MAPA PROJEKTU** níže. Když soubor v mapě je, jdi rovnou tam — neprocházej celý repo (šetří kredity). Když vytvoříš nový důležitý soubor, doplň ho do mapy.
 
@@ -259,6 +259,12 @@ Slidy karuselu (`src/components/home/PromoCarousel.tsx`, `PS5PromoBanner.tsx`, `
 ### 8. Flip karty a plovoucí prvky vs. obsah
 - **Otáčecí (flip) karty** (např. `techhub/PlayerCard.tsx`): když mají přední a zadní strana různě vysoký obsah, výška kontejneru musí odpovídat **AKTUÁLNĚ zobrazené straně** — ne max obou (zbyde prázdná mezera u kratší strany), ani fixní (ořez). Řešení: obě strany `position:absolute` přes sebe + měřit výšku obsahu aktivní strany (`useLayoutEffect` + `ResizeObserver` na vnitřním divu) a nastavit výšku kontejneru, s `transition: height`. Kontejner měj tmavé pozadí, ať během přechodu neprosvítá bílá. Nezaměňuj s grid-stackingem (ten drží max výšku → mezera).
 - **Plovoucí prvky** (scroll tlačítka vlevo dole, chatbot vpravo dole) **nesmí překrývat obsah patičky** — hlavně platební řádek. Nejspolehlivější: patičce dát spodní `padding-bottom` ≥ výšky zóny tlačítek (chatbot ~120 px), aby důležitý obsah skončil nad nimi. Platí mobil i desktop, i při zoomu 125 %.
+
+### 10. Ověření jednoduché UI změny — zeptat se uživatele, ne headless screenshotovat sám
+Po jednoduché/nízkorizikové vizuální změně (např. odebrání/přidání malého UI prvku) se NEMÁ sám pouštět do těžkého headless ověřování (instalace puppeteer, přihlašování, obcházení auth guardů v kódu jen kvůli screenshotu). Typecheck/build ověřit vždy sám (rychlé, bez rizika). U vizuálního výsledku se místo toho rovnou zeptat uživatele, jestli změna vypadá/funguje dobře — on to potvrdí, ušetří se tím čas i kredity.
+Headless screenshot (mobil 375 / desktop 1440) si dělat sám JEN když:
+- jde o rizikovější změnu s reálnou šancí regrese jinde (rozměry, ořezy, sdílené komponenty — viz pravidlo 7), nebo
+- jde o Režim B uzavření (viz pravidlo 0b), kde je vizuální ověření explicitní krok.
 
 ---
 
