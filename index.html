@@ -16,7 +16,7 @@
 </head>
 <body>
 <h1>PrimeGadget EU — stav projektu</h1>
-<p class="meta"><strong>Poslední aktualizace:</strong> 4. 7. 2026 18:45:02 (Europe/Prague)</p>
+<p class="meta"><strong>Poslední aktualizace:</strong> 4. 7. 2026 19:50:14 (Europe/Prague)</p>
 <pre>## NEŽ ZAČNEŠ HLEDAT
 Vždy nejdřív zkontroluj sekci **MAPA PROJEKTU** níže. Když soubor v mapě je, jdi rovnou tam — neprocházej celý repo (šetří kredity). Když vytvoříš nový důležitý soubor, doplň ho do mapy.
 
@@ -184,6 +184,30 @@ Jsi nejlepší dropshipping expert na světě. Ovládáš:
 - **Standardní kroky dělej automaticky** jako součást úkolu, ne jako věci na schválení: úprava souborů, build, screenshot ověření, zápis do `CLAUDE.md` i `PAMET_PROJEKTU.md`, commit + push, regenerace nástěnky.
 - Velký objem (např. překlady mnoha souborů) klidně commituj po bezpečných checkpointech, ale **pokračuj bez ptaní** až do konce.
 - Teprve až je úkol **kompletně hotový**, napiš krátký souhrn, co se udělalo.
+
+### 0b. Dva pracovní režimy — Rychlá iterace (A) vs. Uzavření (B)
+**Režim A — výchozí během běžné práce.** Na úpravu/změnu:
+1. Proveď požadovanou změnu v kódu.
+2. Rychle ověř, že nic nerozbilo build (typecheck / dev server bez chyby).
+   **NEDĚLEJ** automaticky plný screenshot mobil+desktop, **NEDĚLEJ** zápis do `PAMET_PROJEKTU.md`, **NEDĚLEJ** commit/push, **NEDĚLEJ** regeneraci veřejné nástěnky — tyhle kroky se dělají hromadně v Režimu B.
+3. Napiš krátké potvrzení (2–3 věty), co se změnilo.
+
+**Výjimka — i v Režimu A se nikdy nepřeskakuje:**
+- Oprava příčiny + přidání pojistky u nalezené chyby (pravidlo 6).
+- Opatrnost u nevratných/rizikových akcí (mazání dat, platby, produkční DB).
+
+**Režim B — uzavření.** Spouští se DVOJÍ cestou:
+- **(a) Na povel** — uživatel řekne "to je pro teď vše" / "zapiš to" / "ukonči session" apod.
+- **(b) Pojistka na startu KAŽDÉ nové session** — než se začne nový úkol, zkontroluj `git status` a jestli poslední session nezanechala neuzavřené změny (necommitnuté úpravy z Režimu A). Pokud ano, nejdřív dokonči Režim B za tu předchozí session, teprve pak začni nový úkol.
+
+Kroky uzavření (hromadně za všechny změny od posledního uzavření):
+1. Plné ověření (build, headless screenshot mobil ~375 i desktop ~1440 u vizuálních změn).
+2. Jeden souhrnný zápis do `PAMET_PROJEKTU.md`.
+3. Aktualizace `CLAUDE.md` (Hotové funkce / MAPA, pokud se týká).
+4. Commit + push na GitHub.
+5. Regenerace veřejné nástěnky (gist + Pages).
+
+&gt; ⚠️ **Technické omezení (ověřeno 2026-07-04):** Automatické spuštění Režimu B po X minutách nečinnosti **není možné** — Claude Code nemá časovač/idle-hook, hooky (`SessionStart`, `PostToolUse`, `Stop`, ...) se spouští jen jako reakce na událost, ne na plynoucí čas bez aktivity. Proto se automatika řeší jen pojistkou (b) na startu session, ne časovačem. Zvažovaná alternativa (samostatný Windows background skript, co po tichu sám commituje) byla zamítnuta — uměl by jen mechanický commit s obecnou zprávou, ne kvalitní zápis do `PAMET_PROJEKTU.md`, a běžel by bez dozoru.
 
 ### 1. Žádné ptaní na zbytečnosti
 Pokud uživatel říká "nastav mi Facebook reklamu na sluchátka" — UDĚLEJ TO.
