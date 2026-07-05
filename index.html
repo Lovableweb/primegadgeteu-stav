@@ -16,7 +16,7 @@
 </head>
 <body>
 <h1>PrimeGadget EU — stav projektu</h1>
-<p class="meta"><strong>Poslední aktualizace:</strong> 5. 7. 2026 15:29:54 (Europe/Prague)</p>
+<p class="meta"><strong>Poslední aktualizace:</strong> 5. 7. 2026 15:59:01 (Europe/Prague)</p>
 <pre>## NEŽ ZAČNEŠ HLEDAT
 Vždy nejdřív zkontroluj sekci **MAPA PROJEKTU** níže. Když soubor v mapě je, jdi rovnou tam — neprocházej celý repo (šetří kredity). Když vytvoříš nový důležitý soubor, doplň ho do mapy.
 
@@ -101,8 +101,8 @@ Rychlá orientace, ať se neprochází celý repo. Cesty jsou od kořene (`src/.
 - `ReclamationModal.tsx`, `EscalationModal.tsx` — reklamace/eskalace z chatu.
 - `ChatMessageList.tsx` — POZOR: mrtvá/stará verze, needituj (aktivní je `aiShowman/`).
 - `src/lib/offlineResponses.ts` — offline odpovědi 30+ kategorií; `src/lib/chatMemory.ts`, `chatbotActions.ts` — paměť a akce bota.
-- `src/hooks/useVoiceCall.ts` — živá hlasová konverzace (Web Speech API `SpeechRecognition`), zapojeno v hlavičce `AIShowman.tsx` (ikona mikrofonu).
-- **Běžné úkoly → sem sáhni:** chování chatbota → `ai/AIShowman.tsx` + `ai/aiShowman/`; serverová logika → `supabase/functions/claude-chat/` nebo `ai-showman/`; offline texty → `lib/offlineResponses.ts`; hlasový hovor → `hooks/useVoiceCall.ts`.
+- `src/hooks/useDictation.ts` — diktování do textového pole s živým přepisem (Web Speech API `SpeechRecognition`, `interimResults: true`), zapojeno v `aiShowman/ChatInput.tsx` (ikona mikrofonu vedle emoji smajlíka). Bez návaznosti na odeslání/AI — jen plní pole.
+- **Běžné úkoly → sem sáhni:** chování chatbota → `ai/AIShowman.tsx` + `ai/aiShowman/`; serverová logika → `supabase/functions/claude-chat/` nebo `ai-showman/`; offline texty → `lib/offlineResponses.ts`; diktování do pole → `hooks/useDictation.ts` + `aiShowman/ChatInput.tsx`.
 
 ### Tech Hub / gamifikace (`src/components/techhub/`)
 - `PlayerCard.tsx` — karta hráče (fotka, jméno, flip na statistiky, živý avatar).
@@ -292,7 +292,7 @@ Headless screenshot (mobil 375 / desktop 1440) si dělat sám JEN když:
 - Košík drawer bez blokujícího overlay
 - TTS: Microsoft Zuzana Online (Natural) pro CS
 - 2026-07-04 Chatbot Gadget — hlas per zprávu (žádné globální mute, ikona reproduktoru u každé bublinky bota přehraje/zastaví přes `voiceTts.ts`), emoji picker ve vstupu (`ChatInput.tsx`)
-- 2026-07-05 Chatbot Gadget — **skutečná živá hlasová konverzace** (`hooks/useVoiceCall.ts`): ikona mikrofonu v hlavičce nahradila starou atrapu telefonu. Klik zapne naslouchání (Web Speech API, červená pulzující ikona), rozpoznaná řeč se nejdřív vypíše do textového pole (500 ms viditelně) a pak odešle stejnou cestou jako psaná zpráva. Bot vždy odpovídá jen TEXTEM (žádné automatické čtení nahlas) — pokud chce uživatel odpověď slyšet, klikne na ikonku reproduktoru u dané zprávy (existující per-zpráva přehrávání), které při aktivním mikrofonu naslouchání dočasně pozastaví (echo guard) a po doznění obnoví. Ošetřeny edge cases (nepodporovaný prohlížeč, zamítnuté oprávnění mikrofonu).
+- 2026-07-05 Chatbot Gadget — mikrofon nakonec přepracován na **prosté diktování s živým přepisem** (`hooks/useDictation.ts`, nahradil smazaný `useVoiceCall.ts`): ikonka se přesunula z hlavičky do vstupního řádku (`ChatInput.tsx`, vedle emoji smajlíka). `interimResults: true` → text se propisuje do pole živě během mluvení (jako diktování na telefonu), žádné automatické odesílání ani návaznost na AI — odeslání je vždy na uživateli. Přehrání odpovědi nahlas zůstává jen ruční, přes ikonku reproduktoru u zprávy. Ošetřeny edge cases (nepodporovaný prohlížeč, zamítnuté oprávnění mikrofonu).
 - 2026-07-05 **Oprava: hlas „furt čtl" i po vypnutí mikrofonu/zavření chatu** (`src/lib/voiceTts.ts`) — `stopSpeaking()` u hlasu prohlížeče (`speakWithWebSpeech`) reálně nezastavovala větu-po-větě pipeline: cancelaci hlídala proměnná `cancelled`, nastavovaná jen přes `onend` na nikdy-nepřehrávanou "dummy" utterance → `onend` nikdy nenaskočil, `cancelled` zůstávalo `false`, takže i po `stopSpeaking()` doběhl už naplánovaný `setTimeout` a přečetl další větu. Opraveno modulovou proměnnou `stopWebSpeechPipeline`, kterou `stopSpeaking()` reálně volá. Bug byl ve sdíleném kódu → týkal se i tlačítka přehrání jednotlivé zprávy v chatu, ne jen hlasového hovoru.
 - 2026-06-14 Test obousměrné synchronizace
 - 2026-06-14 Automatická obousměrná synchronizace CLAUDE.md zapnuta přes hooky (.claude/hooks/)
