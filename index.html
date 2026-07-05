@@ -16,7 +16,7 @@
 </head>
 <body>
 <h1>PrimeGadget EU — stav projektu</h1>
-<p class="meta"><strong>Poslední aktualizace:</strong> 5. 7. 2026 15:59:01 (Europe/Prague)</p>
+<p class="meta"><strong>Poslední aktualizace:</strong> 6. 7. 2026 0:37:42 (Europe/Prague)</p>
 <pre>## NEŽ ZAČNEŠ HLEDAT
 Vždy nejdřív zkontroluj sekci **MAPA PROJEKTU** níže. Když soubor v mapě je, jdi rovnou tam — neprocházej celý repo (šetří kredity). Když vytvoříš nový důležitý soubor, doplň ho do mapy.
 
@@ -202,11 +202,19 @@ Jsi nejlepší dropshipping expert na světě. Ovládáš:
 - **(b) Pojistka na startu KAŽDÉ nové session** — než se začne nový úkol, zkontroluj `git status` a jestli poslední session nezanechala neuzavřené změny (necommitnuté úpravy z Režimu A). Pokud ano, nejdřív dokonči Režim B za tu předchozí session, teprve pak začni nový úkol.
 
 Kroky uzavření (hromadně za všechny změny od posledního uzavření):
-1. Plné ověření (build, headless screenshot mobil ~375 i desktop ~1440 u vizuálních změn).
+1. Plné ověření (build, headless screenshot mobil ~375 i desktop ~1440 u vizuálních změn) — screenshoty ulož do `vizualni-historie/RRRR-MM-DD/` (viz sekce „Vizuální historie e-shopu" níže), nejen jako jednorázové ověření k zahození.
 2. Jeden souhrnný zápis do `PAMET_PROJEKTU.md`.
 3. Aktualizace `CLAUDE.md` (Hotové funkce / MAPA, pokud se týká).
 4. Commit + push na GitHub.
 5. Regenerace veřejné nástěnky (gist + Pages).
+
+### Vizuální historie e-shopu (`vizualni-historie/`)
+Screenshoty homepage a dalších vizuálně měněných stránek/komponent, ukládané v čase — aby šlo zpětně dohledat, jak web k danému datu vypadal.
+- Struktura: `vizualni-historie/RRRR-MM-DD/nazev-stranky-mobil.png` + `...-desktop.png` (mobil 375 px, desktop 1440 px).
+- Index všech záznamů: `vizualni-historie/INDEX.md` (tabulka datum → popis změny → soubory). Nový řádek při každém Režimu B s vizuální změnou.
+- **Kdy ukládat:** jen v Režimu B (uzavření) u vizuální/UI změny. V Režimu A (rychlá iterace) se historie needěla. Před rizikovou/nevratnou UI změnou (velký redesign, přepis komponenty) navíc "před" screenshot jako referenci.
+- **PNG soubory NEJSOU v Gitu** (`.gitignore`: `vizualni-historie/**/*.png`) — jen lokálně na disku, do Gitu jde pouze `INDEX.md`. Důvod: binárky v historii Gitu nejdou zase zmenšit smazáním (repo by trvale bobtnalo), zatímco textový index stačí k dohledání kontextu a je zálohovaný na GitHubu.
+- Úklid: staré screenshoty (3+ měsíce) se automaticky nemažou — jen upozornění Jirkovi při Režimu B, pokud složka přesáhne ~500 MB, ať se sám rozhodne.
 
 &gt; ⚠️ **Technické omezení (ověřeno 2026-07-04):** Automatické spuštění Režimu B po X minutách nečinnosti **není možné** — Claude Code nemá časovač/idle-hook, hooky (`SessionStart`, `PostToolUse`, `Stop`, ...) se spouští jen jako reakce na událost, ne na plynoucí čas bez aktivity. Proto se automatika řeší jen pojistkou (b) na startu session, ne časovačem. Zvažovaná alternativa (samostatný Windows background skript, co po tichu sám commituje) byla zamítnuta — uměl by jen mechanický commit s obecnou zprávou, ne kvalitní zápis do `PAMET_PROJEKTU.md`, a běžel by bez dozoru.
 
@@ -332,6 +340,7 @@ Headless screenshot (mobil 375 / desktop 1440) si dělat sám JEN když:
 
 - 2026-07-05 **Tech Hub — dopřeklad zbytku (ZMĚNA předchozích rozhodnutí, 4480+ nových klíčů)**: (1) **Tech kvíz** (`TechQuizGame.tsx`) — dřívější rozhodnutí ponechat 64 otázek česky ZRUŠENO, přeloženy do všech 14 jazyků (otázka + 4 odpovědi × 64 × 14 = 4480 klíčů `quiz.q1-64.question/a1-a4`, otázky teď generuje `buildQuestions(t)` místo statického pole; správná odpověď zůstala na stejném indexu ve všech jazycích). Úvodní karta (`quiz.introTitle/Desc/Start`) taky přeložena. (2) **Titan Path tituly úrovní** (`th.level.1-20`) — dřívější rozhodnutí ponechat česky ZRUŠENO, přeloženy do 14 jazyků a zapojeny v `TitanPathIndicator.tsx` + `TitanPath.tsx` přes `levelTitle(level)` (mapuje číslo úrovně, ne text z DB — `titan_levels` tabulka v Supabase zůstává česky, frontend ji nezobrazuje). (3) **Automat** (`SlotMachineGame.tsx`, `game.slot.*`) a **Pexeso** (`MemoryGame.tsx`, `game.memory.*`) — název/popis/tlačítko/tabulka výher přeloženy. (4) **Avatary** — štítek „Zdarma" (`AvatarGiftsTab.tsx`) přepojen na existující `checkout.free` klíč místo nového duplicitního. (5) **Záložka „Racha"** (Streak, španělsky) — ověřeno, že je již plně přeložená ve všech 14 jazycích (`techHub.tabStreak`); zdánlivé oříznutí na „Rac..." je jen běžné chování vodorovně scrollovatelné lišty na okraji viewportu, ne bug. Ověřeno: typecheck + build zelené, uživatel ručně potvrdil funkčnost kvízu (správné odpovědi/body) po přepnutí jazyka.
 - 2026-07-05 **Dopřeklad zbytku: UserMenu, Tech Hub avatary/pexeso HUD, Wishlist, MyOrders, LiveSalesProof**: `UserMenu.tsx` (Můj účet/Moje objednávky/Oblíbené → existující klíče `account.title`/`footer.myOrders`/`account.wishlist`, žádné duplicity). Tech Hub avatary (`AvatarGiftsTab.tsx`) — kategorie, vzácnosti a všech 35 jmen avatarů (`avatar.tab.*`/`avatar.rarity.*`/`avatar.name.*`) + cena přepojena na `techHub.coins`. Tech Memory HUD (`MemoryGame.tsx`, `game.memory.moves/today/startBtn`). **Wishlist.tsx** (`wishlist.*` + reuse `product.new/sale/addToCart/outOfStock`, `common.backToStore`). **MyOrders.tsx** (`orders.*`; `STATUS_LABELS` → funkce `getStatusLabels(t)`; **oprava**: datum objednávky bylo natvrdo `toLocaleDateString('cs-CZ', …)` bez ohledu na jazyk → teď `LANG_MAP[language]`, `LANG_MAP` exportováno z `voiceTts.ts` a znovupoužito). **LiveSalesProof.tsx** (`liveSales.justBought/minutesAgo`; jména osob/české názvy měst v datech záměrně ponechány). **Homepage PS5 combo banner** (`PS5PromoBanner.tsx`) byl už plně přeložený z dřívějška (`ps5.*`) — jen zjednodušena zbytečná obranná podmínka u `common.detail`. Ověřeno headless Edge (přepnutí jazyka vyžaduje nastavit `userLanguage`+`userCurrency`+`userCountry` v localStorage, jinak IP geo-detekce přepíše zpět na CZ) na 375 i 1440 px.
+- 2026-07-06 **Systém vizuální historie e-shopu** (`vizualni-historie/`, viz sekce výše u pravidla 0b) + **balík oprav uzavřený spolu s ním**: prodejní popup `SalesBrainBot.tsx` převeden na `t()` (nové klíče `salesBot.*` × 14 jazyků), ikona přepínače barvy u počítadla návštěvníků (`VisitorCounter.tsx`), sjednocený nadpis+border u „Naposledy prohlížené" (`RecentlyViewed.tsx`), odstranění GLS z chatbot trackingu (`aiShowman/constants.ts`), **Flash Sale karusel** přepsán ze scroll-bound na plynulý autoplay (`FlashSaleBanner.tsx` — `requestAnimationFrame`, ping-pong na konci, oprava konfliktu s `snap-mandatory`), a dvoufázové tlačítko „zpět nahoru" + rychlejší auto-scroll (`Index.tsx`, poslední dvě položky dodělané z dřívějška beze zápisu). Detaily viz `PAMET_PROJEKTU.md` 2026-07-06.
 
 ### Git workflow (Lovable se NEPOUŽÍVÁ):
 - **Lokální verze na disku = jediný zdroj pravdy**, pracuje se ve VS Code
