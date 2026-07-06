@@ -16,46 +16,29 @@
 </head>
 <body>
 <h1>PrimeGadget EU — stav projektu</h1>
-<p class="meta"><strong>Poslední aktualizace:</strong> 6. 7. 2026 6:26:43 (Europe/Prague)</p>
+<p class="meta"><strong>Poslední aktualizace:</strong> 6. 7. 2026 14:36:30 (Europe/Prague)</p>
 <pre>## NEŽ ZAČNEŠ HLEDAT
 **VŽDY nejdřív `memory/JAK-PRACUJEME.md` + `memory/DALSI-KROKY.md`** (rychlá vrstva 0, extrémně krátké). Podle typu úkolu pak `memory/INDEX.md` → příslušný tematický soubor (vrstva 1 mapa podle frekvence / vrstva 2 tematické moduly). Teprve pak — pokud to nestačí — sekce **MAPA PROJEKTU** níže a zbytek `CLAUDE.md`. Archiv (`memory/archiv-*.md`) čti jen na explicitní dotaz na historii. Když vytvoříš nový důležitý soubor, doplň ho do mapy (`CLAUDE.md` i případně `memory/mapa-caste.md`/`mapa-vzacne.md`).
 
-## PRVNÍ KROK KAŽDÉ SESSION
-Než cokoliv uděláš, vždy nejdřív stáhni aktuální stav z GitHubu:
-  git pull origin main
-Pak si přečti soubor CLAUDE.md v kořeni projektu, ať víš, co se změnilo (i z mobilu). Teprve potom začni pracovat.
+## PRVNÍ KROK KAŽDÉ SESSION (startup kontrola)
+Než cokoliv uděláš:
+1. `git pull origin main` — stáhni aktuální stav z GitHubu (i změny udělané z mobilu).
+2. Přečti `CLAUDE.md` (tenhle soubor) + `PAMET_PROJEKTU.md`, ať víš, co se změnilo.
+3. Ověř dev server na `:8080` — pokud neběží, spusť (`npm run dev`), otevři http://localhost:8080.
+4. Zkontroluj `git status` — špinavý strom (neuzavřené změny z minulé session) = pojistka pro Režim B (viz pravidlo 0b): nejdřív dokonči uzavření té předchozí práce, teprve pak začni nový úkol.
 
 ## 📓 DENÍK PROJEKTU `PAMET_PROJEKTU.md` — AUTOMATICKY, BEZ PŘIPOMÍNÁNÍ
 Vedle CLAUDE.md je trvalý deník práce `PAMET_PROJEKTU.md` (nejnovější záznam nahoře). Platí NATRVALO:
-1. **Na STARTU každé práce si přečti `CLAUDE.md` i `PAMET_PROJEKTU.md`.**
-2. **Po dokončení KAŽDÉHO úkolu (i malého) AUTOMATICKY přidej nový datovaný záznam** do `PAMET_PROJEKTU.md` (nejnovější nahoře): co se udělalo, které soubory, výsledek/poznámka. Nečekej na výzvu uživatele.
-3. **Po každém takovém zápisu rovnou `commit` + `push`** na GitHub.
-4. **Po větší změně aktualizuj i `CLAUDE.md`** (sekce „Hotové funkce" + případně MAPA).
+1. **Po dokončení Režimu B (uzavření) AUTOMATICKY přidej nový datovaný záznam** do `PAMET_PROJEKTU.md` (nejnovější nahoře): co se udělalo, které soubory, výsledek/poznámka. Nečekej na výzvu uživatele.
+2. **Po každém takovém zápisu rovnou `commit` + `push`** na GitHub.
+3. **Po větší změně aktualizuj i `CLAUDE.md`** (sekce „Hotové funkce" + případně MAPA).
 
-## OBOUSMĚRNÁ SYNCHRONIZACE CLAUDE.md — ZÁPIS PO KAŽDÉ ZMĚNĚ
-Synchronizace tohoto souboru s GitHubem je OBOUSMĚRNÁ:
-- **Stažení (na začátku):** viz „PRVNÍ KROK KAŽDÉ SESSION" výše — `git pull origin main`.
-- **Nahrání (po každé změně):** kdykoliv něco dokončíš nebo upravíš stav projektu, automaticky to zapiš do `CLAUDE.md` (např. do sekce „Hotové funkce") a hned to nahraj na GitHub:
-  git add CLAUDE.md
-  git commit -m "docs: aktualizace CLAUDE.md"
-  git push origin main
-Tím zůstane GitHub verze (i ta upravená z mobilu) vždy synchronizovaná s lokální. `.env` se NIKDY necommituje.
-
-## VEŘEJNÉ ZRCADLO PRO MOBIL (gist) — AKTUALIZOVAT PO KAŽDÉM PUSHI
-Obsah tohoto souboru je zrcadlený do VEŘEJNÉHO gistu, aby šel načíst přes stálý raw odkaz (např. z mobilu). Po KAŽDÉ aktualizaci `CLAUDE.md` (po commitu a pushi na GitHub) je potřeba aktualizovat i tento gist:
-  gh gist edit $(cat .claude/sync-gist.txt) CLAUDE.md
-ID gistu je uložené v `.claude/sync-gist.txt`. Toto už dělá automaticky hook `.claude/hooks/push-claude-md.sh` — ručně jen pokud hook selže.
-**POZOR:** gist je VEŘEJNÝ — do `CLAUDE.md` NIKDY nepatří hesla, API klíče ani tajemství.
-
-## VEŘEJNÁ WEBOVÁ STRÁNKA (GitHub Pages) — REGENEROVAT PO KAŽDÉ ZMĚNĚ
-Obsah `CLAUDE.md` je publikovaný i jako veřejná webová stránka přes GitHub Pages (dohledatelná vyhledávačem, čitelná z mobilu):
-- **Adresa:** https://lovableweb.github.io/primegadgeteu-stav/
-- **Hlavní repo `primegadgeteu` zůstává PRIVÁTNÍ.** Stránka je v SAMOSTATNÉM veřejném repu `Lovableweb/primegadgeteu-stav` (jen `index.html`), naklonovaném lokálně v `../primegadgeteu-stav`. Důvod: Pages na free plánu jdou jen na veřejných repech, a hlavní kód + Supabase migrace (admin email) nesmí být veřejné.
-- **Generování:** `scripts/gen-stav-page.cjs` vyrobí `index.html` z `CLAUDE.md`.
-Po KAŽDÉ změně `CLAUDE.md` se stránka přegeneruje a pushne do veřejného repa:
-  node scripts/gen-stav-page.cjs . ../primegadgeteu-stav/index.html
-  git -C ../primegadgeteu-stav commit -am "stránka: aktualizace" &amp;&amp; git -C ../primegadgeteu-stav push
-Toto už dělá automaticky hook `.claude/hooks/push-claude-md.sh`. Stránka je VEŘEJNÁ → žádné citlivé údaje v `CLAUDE.md`.
+## Synchronizace a veřejný stav
+`CLAUDE.md` je zrcadlený na dvou veřejných místech, aby šel číst i z mobilu (obojí se řeší JEN v Režimu B, ne po každé drobné úpravě v Režimu A):
+- **Gist** (stálý raw odkaz): `gh gist edit $(cat .claude/sync-gist.txt) CLAUDE.md` — ID gistu v `.claude/sync-gist.txt`.
+- **GitHub Pages** — https://lovableweb.github.io/primegadgeteu-stav/. Hlavní repo `primegadgeteu` zůstává PRIVÁTNÍ; stránka je v SAMOSTATNÉM veřejném repu `Lovableweb/primegadgeteu-stav` (klon `../primegadgeteu-stav`), protože Pages na free plánu jde jen na veřejných repech. Generuje ji `scripts/gen-stav-page.cjs` z `CLAUDE.md`.
+Obojí dělá AUTOMATICKY hook `.claude/hooks/push-claude-md.sh` po každém pushi ZE složky projektu + git `pre-push` hook (`scripts/sync-mirror.sh`) jako pojistka nezávislá na CWD (viz `memory/sync-nastenka.md` pro detaily a historii oprav). Ručně jen pokud hook selže.
+**POZOR: gist i stránka jsou VEŘEJNÉ** — do `CLAUDE.md` NIKDY nepatří hesla, API klíče ani tajemství. `.env` se NIKDY necommituje.
 
 ---
 
@@ -177,28 +160,35 @@ Jsi nejlepší dropshipping expert na světě. Ovládáš:
 ## PRAVIDLA CHOVÁNÍ (NIKDY NEPORUŠUJ)
 
 ### 0. Dělej úkoly CELÉ a SAMOSTATNĚ (nejdůležitější pracovní pravidlo)
-- Když dostaneš úkol, proveď ho **celý od začátku do konce najednou**. Nezastavuj se uprostřed s dotazem „mám pokračovat?" — pokračuj sám, dokud není úkol hotový, ověřený a zapsaný.
-- **Nedrob úkol** zbytečně na malé kroky, které necháváš odklepávat. Zeptej se JEN když:
-  a) je zadání opravdu nejasné a mohl bys udělat špatnou věc, nebo
-  b) hrozí nevratná/riziková akce (mazání dat, přepis něčeho důležitého, produkční zásah do plateb/DB).
-  Ve všech ostatních případech jednej sám bez doptávání.
-- **Standardní kroky dělej automaticky** jako součást úkolu, ne jako věci na schválení: úprava souborů, build, screenshot ověření, zápis do `CLAUDE.md` i `PAMET_PROJEKTU.md`, commit + push, regenerace nástěnky.
+- Výchozí stav je VŽDY Režim A (viz 0b). Když dostaneš úkol, proveď ho **celý od začátku do konce najednou**. Nezastavuj se uprostřed s dotazem „mám pokračovat?" — pokračuj sám, dokud není úkol hotový a ověřený.
+- **Zeptej se PŘED prací JEN u:**
+  a) opravdu nejasného zadání, kde bys mohl udělat špatnou věc,
+  b) nevratné/rizikové akce (mazání dat, produkční DB/platby — viz formát varování v `memory/JAK-PRACUJEME.md`),
+  c) chybějícího klíče/přístupu,
+  d) úpravy API klíčů/`.env` (vždy automaticky riziková).
+  Nic jiného — ve všech ostatních případech jednej sám bez doptávání.
+- **Standardní kroky dělej automaticky** jako součást úkolu, ne jako věci na schválení — ale **jen v Režimu B** (viz 0b): úprava souborů a build/typecheck patří VŽDY, screenshot/zápis do `PAMET_PROJEKTU.md`/commit+push/regenerace nástěnky jen při uzavření.
 - Velký objem (např. překlady mnoha souborů) klidně commituj po bezpečných checkpointech, ale **pokračuj bez ptaní** až do konce.
-- Teprve až je úkol **kompletně hotový**, napiš krátký souhrn, co se udělalo.
+- **Zkomoleniny z hlasového vstupu** (Jirka často diktuje z mobilu): vyber nejpravděpodobnější výklad, nezastavuj se kvůli tomu s dotazem — zvolený výklad zapiš do reportu do bloku „Předpoklady, které jsem zvolil".
+- **Než sáhneš na konkrétní soubor**, ověř jeho cestu proti MAPĚ PROJEKTU níže — cesty se v čase mění.
+- **Mimo-úkolové postřehy** patří jen do bloku „Všiml jsem si navíc" v reportu — needěláš je automaticky (žádný scope creep).
+- **Oslovuj uživatele Jirko** (Jiří Smaluch) ve shrnutích i běžné komunikaci.
+- **Na startu úkolu zkontroluj `memory/DALSI-KROKY.md`** kvůli kolizím s právě rozdělanou prací.
+- Teprve až je úkol **kompletně hotový**, napiš report (formát v `memory/JAK-PRACUJEME.md`: „HOTOVO — ZMĚNA PROVEDENA" + shrnutí + tabulka úkolů).
 
 ### 0b. Dva pracovní režimy — Rychlá iterace (A) vs. Uzavření (B)
-**Režim A — výchozí během běžné práce.** Na úpravu/změnu:
-1. Proveď požadovanou změnu v kódu.
-2. Rychle ověř, že nic nerozbilo build (typecheck / dev server bez chyby).
+**Režim A — VÝCHOZÍ VŽDY.** Na úpravu/změnu:
+1. Proveď požadovanou změnu v kódu celou, bez přerušení.
+2. Ověř, že nic nerozbilo build (typecheck / dev server bez chyby); u vizuální změny i reálné zobrazení dle pravidla 10. Při selhání buildu zkus opravit max 2×, pak nahlas problém (nezasekávej se v smyčce).
    **NEDĚLEJ** automaticky plný screenshot mobil+desktop, **NEDĚLEJ** zápis do `PAMET_PROJEKTU.md`, **NEDĚLEJ** commit/push, **NEDĚLEJ** regeneraci veřejné nástěnky — tyhle kroky se dělají hromadně v Režimu B.
-3. Napiš krátké potvrzení (2–3 věty), co se změnilo.
+3. Napiš report ve formátu z `memory/JAK-PRACUJEME.md` (VELKÝMI PÍSMENY „HOTOVO — ZMĚNA PROVEDENA" + krátké shrnutí + seznam souborů + tabulka úkolů). Neptej se dál.
 
 **Výjimka — i v Režimu A se nikdy nepřeskakuje:**
 - Oprava příčiny + přidání pojistky u nalezené chyby (pravidlo 6).
 - Opatrnost u nevratných/rizikových akcí (mazání dat, platby, produkční DB).
 
 **Režim B — uzavření.** Spouští se DVOJÍ cestou:
-- **(a) Na povel** — uživatel řekne "to je pro teď vše" / "zapiš to" / "ukonči session" apod.
+- **(a) Na klíčové slovo** — "hotovo" / "zapiš to" / "ukonči session" / "commitni" / "pushni" (nebo zjevný ekvivalent).
 - **(b) Pojistka na startu KAŽDÉ nové session** — než se začne nový úkol, zkontroluj `git status` a jestli poslední session nezanechala neuzavřené změny (necommitnuté úpravy z Režimu A). Pokud ano, nejdřív dokonči Režim B za tu předchozí session, teprve pak začni nový úkol.
 
 Kroky uzavření (hromadně za všechny změny od posledního uzavření):
@@ -235,11 +225,7 @@ Komunikuj česky. Technické termíny vysvětli jednoduše.
 ### 4. Proaktivní návrhy
 Po každém úkolu navrhni co by se dalo zlepšit nebo co dělat dál.
 
-### 5. Startup kontrola (VŽDY na začátku session)
-1. `git pull origin main` — stáhnout změny z GitHubu
-2. Ověřit dev server na :8080, pokud neběží — spustit
-3. Otevřít http://localhost:8080 v prohlížeči
-4. Zkontrolovat `git status`
+*(Startup kontrola byla sloučena do sekce „PRVNÍ KROK KAŽDÉ SESSION" úplně nahoře — číslo 5 je záměrně vynechané, ať se nemusí přečíslovávat pravidla 6–10 a nerozbijí se odkazy na ně.)*
 
 ### 6. Po opravě chyby VŽDY prevence (ať se nikdy nevrátí)
 Když najdu a opravím jakoukoliv chybu, NIKDY neskončím u pouhé opravy. Vždy ještě:
@@ -256,7 +242,7 @@ Slidy karuselu (`src/components/home/PromoCarousel.tsx`, `PS5PromoBanner.tsx`, `
 - Poměr **5/2 jen na sm+** (široká obrazovka). Na **mobilu pevná vyšší výška**, aby se vešel obsah PS5 i celý obrázek dronu.
 - **Drone banner je od 2026-06-21 ŽIVÝ** (HTML text, NE vypálený): obrázek `/drony-banner.webp` se ZÁMĚRNĚ ořezává tak, aby byla vidět jen pravá část s drony (vypálený text odříznut), levá strana = živý HTML text. Mobil: text nahoře / drony dole (img `w-[200%] object-right` → jen pravá polovina); sm+: text vlevo / drony vpravo (img `w-full object-right`). Okraje přelité do žluté (`#FBB816`). PS5 banner stále řeš dle potřeby.
 - Texty/tlačítka **responsivně zmenšovat** na mobilu.
-- **VŽDY ověřit na mobilní šířce (~375 px) i desktopu (~1440 px), oba slidy** — headless Edge screenshotem (viz [[pred-ui-zmenou-overit-regrese]]).
+- **VŽDY ověřit na mobilní šířce (~375 px) i desktopu (~1440 px), oba slidy** — headless Edge screenshotem (kritérium kdy screenshotovat sám viz pravidlo 10 níže).
 
 ### 9. Překlady — VŠE přes `t()`, vždy do všech 14 jazyků
 - **Žádný viditelný text napevno.** Každý nový text v UI (bannery, panely, tlačítka, aria-labely, hlášky) musí jít přes `t('klíč')` z `useLocalization`.
@@ -344,6 +330,7 @@ Headless screenshot (mobil 375 / desktop 1440) si dělat sám JEN když:
 - 2026-07-06 **Vrstvená struktura paměti `memory/`** (15 souborů, 4 vrstvy — vždy čtená vrstva 0 / mapa podle frekvence / tematické moduly / archiv jen na dotaz, viz `memory/INDEX.md`): rychlejší vstup do kontextu bez procházení celého `CLAUDE.md`/`PAMET_PROJEKTU.md`, které zůstávají obsahově beze změny (jen tento řádek + sekce „NEŽ ZAČNEŠ HLEDAT" výše). Detaily viz `PAMET_PROJEKTU.md` 2026-07-06.
 - 2026-07-06 **Produkty přeloženy do 14 jazyků — i18n KOMPLETNÍ** (poslední zbývající položka): všech 49 produktů z `data/products.ts` (popis u všech 49, název u 15 obecných produktů; u 34 značkových/modelových produktů — Samsung, Apple, PS5, Xbox, DJI, parfémy — název záměrně stejný ve všech jazycích, e-commerce konvence). 1372 nových klíčů `product.&lt;id&gt;.title`/`product.&lt;id&gt;.description` × 14. Nový hook `hooks/useLocalizedProduct.ts` zapojený do `ProductCard`/`ProductDetail`/`Compare`/`CompareCard`/`SalesBrainBot`/`ProductQuiz`/`HotDeals`/`BundleDeals`/`LiveSalesProof` — přes `ProductCard` se lokalizace automaticky protáhla i do košíku/pokladny. Mimo rozsah záměrně: admin, historické objednávky v `MyOrders` (název zůstává jak byl v okamžiku nákupu), interní AI kontext v `useChatApi.ts`. Ověřeno headless Edge screenshotem v angličtině. Detaily viz `PAMET_PROJEKTU.md` 2026-07-06.
 - 2026-07-06 **Kategorie a podkategorie přeloženy do 14 jazyků — i18n 100% KOMPLETNÍ**: hlavní kategorie (`category.&lt;id&gt;`, 8×) byly už hotové z dřívějška, doplněno 44 podkategorií (`subcategory.&lt;id&gt;` × 14 = 616 nových řádků). Zároveň opraveno reálné vykreslení: `MegaMenu.tsx` dřív zobrazoval podkategorie natvrdo česky a řádek „Vše z X" ignoroval i existující překlad kategorie — teď `t(\`subcategory.\${sub.id}\`)` a konečně využitý (dosud nepoužívaný) klíč `menu.showAll`. `Index.tsx` (`getCategoryName()`) opraven stejně — nadpis „Všechny produkty" u vybrané kategorie dřív ukazoval natvrdo češtinu bez ohledu na jazyk. Mimo rozsah: `Compare.tsx` (celá stránka historicky česky, samostatný úkol), SEO structured data (neviditelné pro uživatele). Detaily viz `PAMET_PROJEKTU.md` 2026-07-06.
+- 2026-07-06 **Kompletní systém pravidel — Režim A/B, HOTOVO+tabulka, navigační menu, revert, týdenní shrnutí, Jirkovy nápady**: pravidlo 0/0b zpřesněno (Režim A vždy výchozí, Režim B jen na klíčová slova nebo špinavý git status, přesná kritéria kdy se ptát předem, formát reportu „HOTOVO — ZMĚNA PROVEDENA" + tabulka), sloučeny 3 duplicitní sekce (startup, synchronizace), opraven rozbitý odkaz v pravidle 7. `memory/JAK-PRACUJEME.md` rozšířeno na plnou operační příručku (navigační menu „jdeme dělat úpravy", revert, týdenní shrnutí, odhad náročnosti, úklid paměti). Nové `memory/slovnicek.md` a `memory/JIRKOVY-NAPADY.md` (backlog nápadů/chyb). `memory/DALSI-KROKY.md` přepsáno na tabulku rozdělané práce + externí blokátory, uklizeny staré hotové položky. Detaily viz `PAMET_PROJEKTU.md` 2026-07-06. Zahrnuje i drobnou UI úpravu ikony košíku v hlavičce (černý skleněný kruh, brandová žlutozlatá ikona/badge, silnější obrys).
 
 ### Git workflow (Lovable se NEPOUŽÍVÁ):
 - **Lokální verze na disku = jediný zdroj pravdy**, pracuje se ve VS Code
