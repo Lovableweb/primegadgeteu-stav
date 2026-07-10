@@ -16,7 +16,7 @@
 </head>
 <body>
 <h1>PrimeGadget EU — stav projektu</h1>
-<p class="meta"><strong>Poslední aktualizace:</strong> 10. 7. 2026 19:37:15 (Europe/Prague)</p>
+<p class="meta"><strong>Poslední aktualizace:</strong> 10. 7. 2026 23:02:01 (Europe/Prague)</p>
 <pre>## NEŽ ZAČNEŠ HLEDAT
 **VŽDY nejdřív `memory/JAK-PRACUJEME.md` + `memory/DALSI-KROKY.md`** (rychlá vrstva 0, extrémně krátké). Podle typu úkolu pak `memory/INDEX.md` → příslušný tematický soubor (vrstva 1 mapa podle frekvence / vrstva 2 tematické moduly). Teprve pak — pokud to nestačí — sekce **MAPA PROJEKTU** níže a zbytek `CLAUDE.md`. Archiv (`memory/archiv-*.md`) čti jen na explicitní dotaz na historii. Když vytvoříš nový důležitý soubor, doplň ho do mapy (`CLAUDE.md` i případně `memory/mapa-caste.md`/`mapa-vzacne.md`).
 
@@ -276,6 +276,8 @@ Headless screenshot (mobil 375 / desktop 1440) si dělat sám JEN když:
 **Admin email**: (skryt z veřejného gistu — Claude ho zná z interní paměti)
 
 ### Hotové funkce:
+- 2026-07-10 **Oprava IP geo-detekce jazyka/měny pro cizí země** (`context/LocalizationContext.tsx`): whitelist 18 zemí natvrdo přepisoval nerozpoznanou zemi (Finsko, Bulharsko, Irsko, mimoevropské země…) na `'CZ'`, takže existující fallback EUR/en byl mrtvý kód a takoví návštěvníci dostávali vynuceně češtinu+koruny. Nahrazeno jen formátovou kontrolou ISO 3166-1 alpha-2 (chrání dál proti injekci z API), fallback EUR/en teď reálně funguje. DE/US/PL beze změny. Ověřeno Playwright testem s mockovanou odpovědí API.
+- 2026-07-10 **Kompletní audit mezer projektu** — přehled co typický e-shop má a co tu chybí/je nedodělané (právní IČO, cookie lišta reálně neblokuje, GitHub PAT rotace, chybějící analytika ID, přístupnost...). Viz `memory/audit-mezer.md`.
 - 2026-07-10 **Dopřeklad zbytku webu do 14 jazyků** — verifikační test webu odhalil natvrdo psanou češtinu i mimo checkout; opraveno 28 souborů (App.tsx, AuthModal, ZasilkovnaWidget, Compare.tsx, MyOrders, Wishlist, Affiliate a další), 179 nových klíčů × 14 jazyků v `translations.ts`. Detaily viz `PAMET_PROJEKTU.md` 2026-07-10.
 - 2026-07-10 **Balík 4**: sdílená místnost v chatbotu (`components/ai/aiShowman/RoomView.tsx`, tabulka `chat_room_messages`, `hooks/useSiteVisitorCount.ts` — Realtime Presence).
 - 2026-07-10 **Balík 3**: admin záložka Statistiky (`components/admin/AdvancedStatsTab.tsx`, `hooks/useAdminStats.ts`) + CRM záložka Zákazníci (`components/admin/CustomersTable.tsx`, edge funkce `admin-customers`), online indikátor přes Realtime Presence, notifikace na velké objednávky.
