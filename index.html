@@ -16,7 +16,7 @@
 </head>
 <body>
 <h1>PrimeGadget EU — stav projektu</h1>
-<p class="meta"><strong>Poslední aktualizace:</strong> 11. 7. 2026 5:50:39 (Europe/Prague)</p>
+<p class="meta"><strong>Poslední aktualizace:</strong> 11. 7. 2026 10:21:08 (Europe/Prague)</p>
 <pre>## NEŽ ZAČNEŠ HLEDAT
 **VŽDY nejdřív `memory/JAK-PRACUJEME.md` + `memory/DALSI-KROKY.md`** (rychlá vrstva 0, extrémně krátké). Podle typu úkolu pak `memory/INDEX.md` → příslušný tematický soubor (vrstva 1 mapa podle frekvence / vrstva 2 tematické moduly). Teprve pak — pokud to nestačí — sekce **MAPA PROJEKTU** níže a zbytek `CLAUDE.md`. Archiv (`memory/archiv-*.md`) čti jen na explicitní dotaz na historii. Když vytvoříš nový důležitý soubor, doplň ho do mapy (`CLAUDE.md` i případně `memory/mapa-caste.md`/`mapa-vzacne.md`).
 
@@ -239,7 +239,8 @@ Když najdu a opravím jakoukoliv chybu, NIKDY neskončím u pouhé opravy. Vžd
 ### 7. Carousel / promo bannery — obsah VŽDY celý uvnitř plochy (mobil i desktop)
 Slidy karuselu (`src/components/home/PromoCarousel.tsx`, `PS5PromoBanner.tsx`, `DronePromoBanner.tsx`) musí mít **veškerý obsah celý vidět uvnitř plochy na VŠECH šířkách** — nic se nesmí ořezávat ani přetékat za levý/pravý/horní/dolní okraj.
 - **Výšku/poměr řeš JEDNOTNĚ na jednom místě** (viewport v `PromoCarousel`), ne v každém slidu zvlášť — ať se chyba nemůže vrátit u jednoho slidu.
-- Poměr **5/2 jen na sm+** (široká obrazovka). Na **mobilu pevná vyšší výška**, aby se vešel obsah PS5 i celý obrázek dronu.
+- Poměr **5/2 jen na sm+** (široká obrazovka). Na **mobilu výška PS5 slidu DYNAMICKÁ podle obsahu** (viz níže), dron slide fixní vyšší výška (`DRONE_MOBILE_HEIGHT`), aby se vešel celý obrázek dronu.
+- **2026-07-11 oprava — jedno pevné číslo na mobilu NESTAČÍ**: na šířkách **cca 320–480 px** (potvrzeno konkrétně na 320/360/390/430/480, testováno vzorkem 320–480 dle Kroku 5) se PS5 nadpis/text/výběr ovladačů zalamuje jinak podle šířky → různá skutečná potřebná výška obsahu, kterou jedno pevné číslo (dřív 560 px na všech mobilních šířkách) nemohlo pokrýt správně pro všechny — cena a tlačítka Detail/Koupit byly u některých šířek oříznuté mimo plochu bez možnosti scrollu. Oprava: `PromoCarousel.tsx` měří `scrollHeight` vnitřního obsahového divu `PS5PromoBanner.tsx` (přes `forwardRef` na `contentRef`, ne na kořen — scrollHeight vrátí přirozenou nezoříznutou výšku i když je div sám výškově omezený/overflow-hidden) a podle toho nastaví výšku kontejneru (`mobileHeight` state, `transition-[height]` pro plynulý přechod mezi slidy). **Dron slide záměrně zůstal na fixní výšce** (`DRONE_MOBILE_HEIGHT = 560`) — obrázek dronů je `flex-1` a roztahuje se do cokoliv dostane (nemá vlastní přirozenou obsahovou výšku), takže dynamické měření by u něj bylo kruhové/nesmyslné.
 - **Drone banner je od 2026-06-21 ŽIVÝ** (HTML text, NE vypálený): obrázek `/drony-banner.webp` se ZÁMĚRNĚ ořezává tak, aby byla vidět jen pravá část s drony (vypálený text odříznut), levá strana = živý HTML text. Mobil: text nahoře / drony dole (img `w-[200%] object-right` → jen pravá polovina); sm+: text vlevo / drony vpravo (img `w-full object-right`). Okraje přelité do žluté (`#FBB816`). PS5 banner stále řeš dle potřeby.
 - Texty/tlačítka **responsivně zmenšovat** na mobilu.
 - **VŽDY ověřit na mobilní šířce (~375 px) i desktopu (~1440 px), oba slidy** — headless Edge screenshotem (kritérium kdy screenshotovat sám viz pravidlo 10 níže).
