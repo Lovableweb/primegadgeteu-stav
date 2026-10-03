@@ -16,7 +16,7 @@
 </head>
 <body>
 <h1>PrimeGadget EU — stav projektu</h1>
-<p class="meta"><strong>Poslední aktualizace:</strong> 4. 10. 2026 0:22:33 (Europe/Prague)</p>
+<p class="meta"><strong>Poslední aktualizace:</strong> 4. 10. 2026 0:52:09 (Europe/Prague)</p>
 <pre>## NEŽ ZAČNEŠ HLEDAT
 **VŽDY nejdřív `memory/JAK-PRACUJEME.md` + `memory/DALSI-KROKY.md`** (rychlá vrstva 0, extrémně krátké). Podle typu úkolu pak `memory/INDEX.md` → příslušný tematický soubor (vrstva 1 mapa podle frekvence / vrstva 2 tematické moduly). Teprve pak — pokud to nestačí — sekce **MAPA PROJEKTU** níže a zbytek `CLAUDE.md`. Archiv (`memory/archiv-*.md`) čti jen na explicitní dotaz na historii. Když vytvoříš nový důležitý soubor, doplň ho do mapy (`CLAUDE.md` i případně `memory/mapa-caste.md`/`mapa-vzacne.md`).
 
@@ -127,7 +127,7 @@ Rychlá orientace, ať se neprochází celý repo. Cesty jsou od kořene (`src/.
 
 ### Sdílené lib / hooks / context (`src/lib/`, `src/hooks/`, `src/context/`)
 - Context: `CartContext.tsx` (košík), `AuthContext.tsx` (přihlášení), `LocalizationContext.tsx` (jazyk/měna), `ReviewSummaryContext.tsx` (souhrn recenzí).
-- `src/integrations/supabase/client.ts` — Supabase klient (jediné napojení na DB).
+- `src/integrations/supabase/client.ts` — Supabase klient (jediné napojení na DB). **Kód běžící při startu** (kontexty, hooky v App/Header) ho NEIMPORTUJE napřímo, ale přes `getSupabase()` z `src/integrations/supabase/lazy.ts` (jinak se 42 kB vrátí do startu; build to zablokuje `check-bundle.cjs`). Stránky a lazy komponenty mohou importovat `client.ts` přímo.
 - `src/i18n/locales/*.json` — překlady 14 jazyků (1 soubor = 1 jazyk, lazy); `src/i18n/translations.ts` — jen loader (`loadTranslations`, `LANGUAGES`); `src/main.tsx` načte zvolený jazyk před prvním renderem.
 - `src/lib/toast.ts` — **hlášky VŽDY importovat odsud** (`import { toast } from "@/lib/toast"`), NIKDY přímo ze `"sonner"` (vrátilo by 32 kB do startovního kódu; build to zablokuje `check-bundle.cjs`). Zobrazení: `components/ui/LazyToasters.tsx`.
 - `src/hooks/useSeo.ts` — title/description/canonical/OG/robots per stránka (každá veřejná stránka ho volá; neveřejné `noindex`).
@@ -283,6 +283,7 @@ Headless screenshot (mobil 375 / desktop 1440) si dělat sám JEN když:
 **Admin email**: (skryt z veřejného gistu — Claude ho zná z interní paměti)
 
 ### Hotové funkce:
+- 2026-10-04 **Supabase mimo startovní kód**: `src/integrations/supabase/lazy.ts` (`getSupabase()`) pro kontexty a hooky běžící při startu; ~42 kB gzip se nestahuje před prvním renderem. Se 3G LCP 1 336 → 962 ms. Pojistka `check-bundle.cjs`.
 - 2026-10-03 **Rádio v hlavičce bez přehrávače ve startu**: `layout/RadioPlayer.tsx` (sdílený vzhled `RadioSkin` + klidová verze) a `layout/RadioPlayerLive.tsx` (přehrávač, až při interakci / prvním gestu na desktopu). Hlavička pixelově beze změny. Opraveno 2026-10-04: po zastavení se už neukazuje „Offline“ (`radioStop` odebírá zdroj místo `src=""`, test `src/test/radioSingleton.test.ts`).
 - 2026-10-03 **Menu měny a jazyka bez Radixu ve startu** (`layout/DeferredMenu.tsx`, Radix menu v `CurrencyMenu.tsx`/`LocaleMenu.tsx` až při interakci) + zrušen ruční chunk `vendor-ui` ve `vite.config.ts`. Entry 51,0 kB gzip, `vendor-ui` se při startu nestahuje (~26 kB gzip méně). Hlavička pixelově beze změny.
 - 2026-10-03 **Hlavní balík 61,1 kB gzip** (ráno 89,8): `ProductGrid` + `RecentlyViewed` lazy na homepage (karta, PriceMatrix a spol. mimo start), připomínky opuštěného košíku přes `cart/AbandonedCartWatcher.tsx` až s prvním zbožím v košíku. `RadioPlayer` záměrně ponechán (desktopová hlavička v předgenerovaném HTML by poskočila).
