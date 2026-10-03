@@ -16,7 +16,7 @@
 </head>
 <body>
 <h1>PrimeGadget EU — stav projektu</h1>
-<p class="meta"><strong>Poslední aktualizace:</strong> 3. 10. 2026 21:17:05 (Europe/Prague)</p>
+<p class="meta"><strong>Poslední aktualizace:</strong> 3. 10. 2026 22:58:00 (Europe/Prague)</p>
 <pre>## NEŽ ZAČNEŠ HLEDAT
 **VŽDY nejdřív `memory/JAK-PRACUJEME.md` + `memory/DALSI-KROKY.md`** (rychlá vrstva 0, extrémně krátké). Podle typu úkolu pak `memory/INDEX.md` → příslušný tematický soubor (vrstva 1 mapa podle frekvence / vrstva 2 tematické moduly). Teprve pak — pokud to nestačí — sekce **MAPA PROJEKTU** níže a zbytek `CLAUDE.md`. Archiv (`memory/archiv-*.md`) čti jen na explicitní dotaz na historii. Když vytvoříš nový důležitý soubor, doplň ho do mapy (`CLAUDE.md` i případně `memory/mapa-caste.md`/`mapa-vzacne.md`).
 
@@ -128,6 +128,7 @@ Rychlá orientace, ať se neprochází celý repo. Cesty jsou od kořene (`src/.
 - Context: `CartContext.tsx` (košík), `AuthContext.tsx` (přihlášení), `LocalizationContext.tsx` (jazyk/měna), `ReviewSummaryContext.tsx` (souhrn recenzí).
 - `src/integrations/supabase/client.ts` — Supabase klient (jediné napojení na DB).
 - `src/i18n/locales/*.json` — překlady 14 jazyků (1 soubor = 1 jazyk, lazy); `src/i18n/translations.ts` — jen loader (`loadTranslations`, `LANGUAGES`); `src/main.tsx` načte zvolený jazyk před prvním renderem.
+- `src/lib/toast.ts` — **hlášky VŽDY importovat odsud** (`import { toast } from "@/lib/toast"`), NIKDY přímo ze `"sonner"` (vrátilo by 32 kB do startovního kódu; build to zablokuje `check-bundle.cjs`). Zobrazení: `components/ui/LazyToasters.tsx`.
 - `src/hooks/useSeo.ts` — title/description/canonical/OG/robots per stránka (každá veřejná stránka ho volá; neveřejné `noindex`).
 - `src/lib/productMediaLoader.ts` — dávkové načítání galerie produktů (1 dotaz místo N; ne-UUID katalogová ID se do DB neposílají).
 - `src/components/ui/LazyMount.tsx` — odložené připojení sekcí homepage (při přiblížení / v nečinnosti).
@@ -281,6 +282,7 @@ Headless screenshot (mobil 375 / desktop 1440) si dělat sám JEN když:
 **Admin email**: (skryt z veřejného gistu — Claude ho zná z interní paměti)
 
 ### Hotové funkce:
+- 2026-10-03 **Menší hlavní balík** (entry 89,8 → 67,8 kB gzip, blokování startu ~−22–30 %): hlášky přes `src/lib/toast.ts` (sonner až při první hlášce) + `ui/LazyToasters.tsx`, košík `cart/LazyCartDrawer.tsx`, AuthModal / FlashSaleBanner / Footer lazy. Pojistka `check-bundle.cjs` bod 5 (sonner, Radix toast/Dialog nesmí do startovního kódu).
 - 2026-10-03 **Odložené sekce homepage až při přiblížení** (`ui/LazyMount.tsx`): záloha „připoj bez scrollu“ až 10 s po načtení (dřív hned po load → skoro polovina blokování startu). TBT homepage 903 → 556 ms (−38 %). Flash Sale autoplay bez vynuceného layoutu při startu. Komponenty samy jsou levné (CPU profil) — další páka je spuštění hlavního balíku (~185 ms) a první render.
 - 2026-10-03 **Start Reactu po kouscích** (`src/main.tsx`, `startTransition`): blokování hlavního vlákna −30 %, nejdelší úloha poloviční (homepage 494 → 244 ms při 4× CPU). „Strop prvního layoutu“ prověřen — není to problém stránky (teplý relayout 1,4 ms), dál neřešit. Hydratace (`hydrateRoot`) zamítnuta: předgenerované HTML nemá značky Suspense → React stejně celý root překreslí. Detaily `PAMET_PROJEKTU.md`.
 - 2026-10-03 **Kritické CSS + ostřejší fotky produktů**: (1) `scripts/prerender.cjs` po předgenerování spustí `beasties` (devDependency, verze 0.4.3 — 0.5+ chce Node ≥ 20.19) → každá stránka má v HTML jen styly, které potřebuje (~15 kB), celý CSS se dotahuje neblokujícím způsobem (`media="print"` → `onload`). `src/main.tsx` `stylesReady()` drží React, dokud celý CSS nedorazí (žádné probliknutí bez stylů ani u nepředgenerovaných stránek). Ověřeno se zablokovaným CSS souborem: rozložení shodné na všech stránkách. Odstranilo 1,1 s blokujícího CSS; Lighthouse skóre homepage ale v rámci šumu stejné — strop teď je první výpočet rozložení homepage (~1 s při 4× zpomaleném CPU, i bez JS). (2) `src/lib/productImage.ts` — Unsplash fotky produktů mají `srcset` 200–1200 px + `sizes` (`ProductGallery`), og:image a JSON-LD přes `productImageAt()`. Test `src/test/productImage.test.ts`.
