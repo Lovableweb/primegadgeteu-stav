@@ -16,7 +16,7 @@
 </head>
 <body>
 <h1>PrimeGadget EU — stav projektu</h1>
-<p class="meta"><strong>Poslední aktualizace:</strong> 4. 10. 2026 3:49:08 (Europe/Prague)</p>
+<p class="meta"><strong>Poslední aktualizace:</strong> 4. 10. 2026 11:40:35 (Europe/Prague)</p>
 <pre>## NEŽ ZAČNEŠ HLEDAT
 **VŽDY nejdřív `memory/JAK-PRACUJEME.md` + `memory/DALSI-KROKY.md`** (rychlá vrstva 0, extrémně krátké). Podle typu úkolu pak `memory/INDEX.md` → příslušný tematický soubor (vrstva 1 mapa podle frekvence / vrstva 2 tematické moduly). Teprve pak — pokud to nestačí — sekce **MAPA PROJEKTU** níže a zbytek `CLAUDE.md`. Archiv (`memory/archiv-*.md`) čti jen na explicitní dotaz na historii. Když vytvoříš nový důležitý soubor, doplň ho do mapy (`CLAUDE.md` i případně `memory/mapa-caste.md`/`mapa-vzacne.md`).
 
@@ -129,6 +129,8 @@ Rychlá orientace, ať se neprochází celý repo. Cesty jsou od kořene (`src/.
 - Context: `CartContext.tsx` (košík), `AuthContext.tsx` (přihlášení), `LocalizationContext.tsx` (jazyk/měna), `ReviewSummaryContext.tsx` (souhrn recenzí).
 - `src/integrations/supabase/client.ts` — Supabase klient (jediné napojení na DB). **Kód běžící při startu** (kontexty, hooky v App/Header) ho NEIMPORTUJE napřímo, ale přes `getSupabase()` z `src/integrations/supabase/lazy.ts` (jinak se 42 kB vrátí do startu; build to zablokuje `check-bundle.cjs`). Stránky a lazy komponenty mohou importovat `client.ts` přímo.
 - `src/i18n/locales/*.json` — překlady 14 jazyků (1 soubor = 1 jazyk, lazy); `src/i18n/translations.ts` — jen loader (`loadTranslations`, `LANGUAGES`); `src/main.tsx` načte zvolený jazyk před prvním renderem.
+- `src/lib/overlayGate.ts` — **plovoucí prvky (maskot chatbota, cenová bublina, prodejní popup, „právě koupil", hlášky o odznacích) až po rozhodnutí v cookie liště a postupně** (`OVERLAY_DELAY`, `whenOverlayAllowed`/`useOverlayAllowed`); nový plovoucí prvek zapoj sem s vlastním zpožděním. Test `src/test/overlayGate.test.ts`.
+- `src/config/socialLinks.ts` — adresy sociálních sítí v patičce (prázdné = skryté).
 - `src/lib/toast.ts` — **hlášky VŽDY importovat odsud** (`import { toast } from "@/lib/toast"`), NIKDY přímo ze `"sonner"` (vrátilo by 32 kB do startovního kódu; build to zablokuje `check-bundle.cjs`). Zobrazení: `components/ui/LazyToasters.tsx`.
 - `src/hooks/useSeo.ts` — title/description/canonical/OG/robots per stránka (každá veřejná stránka ho volá; neveřejné `noindex`).
 - `src/lib/productMediaLoader.ts` — dávkové načítání galerie produktů (1 dotaz místo N; ne-UUID katalogová ID se do DB neposílají).
@@ -283,6 +285,7 @@ Headless screenshot (mobil 375 / desktop 1440) si dělat sám JEN když:
 **Admin email**: (skryt z veřejného gistu — Claude ho zná z interní paměti)
 
 ### Hotové funkce:
+- 2026-10-04 **Úpravy po auditu živého webu**: na mobilu nic plovoucího před rozhodnutím o cookies a pak postupně (`lib/overlayGate.ts`), kompaktní cookie lišta (171 px na 390×844), přeložené hlášky odznaků/misí, `sr-only` H1 na homepage, alt/aria-label (košík, menu, chat, hvězdičky, vlajky, ± u produktu; Playwright sken 0 nálezů), sociální sítě v patičce skryté do doplnění `config/socialLinks.ts`.
 - 2026-10-04 **Patička černá a vycentrovaná** (`layout/Footer.tsx`): `bg-black`, značka nahoře uprostřed, 4 sloupce odkazů na střed (desktop vedle sebe / tablet 2×2 / mobil pod sebou), newsletter a copyright + platby uprostřed. Ověřeno 390/768/1440 px.
 - 2026-10-04 **Rádio kompletně odstraněno** (rozhodnutí Jirky): smazány `layout/RadioPlayer.tsx`, `RadioPlayerLive.tsx`, `lib/radioSingleton.ts`, test, ambientní autoplay v `App.tsx`, animace `equalize` v tailwindu, klíče `radio.*` ve 14 jazycích, SomaFM z CSP (`public/_headers`). Hlavička ověřena na 390/768/1024/1440 px. Starší záznamy o rádiu níže jsou jen historie.
 - 2026-10-04 **Měřicí kódy jen se souhlasem z cookie lišty (GDPR)**: `src/lib/consent.ts` + `initPixels(consent)` — GA4 = analytika, TikTok = marketing, Meta Pixel = analytika I marketing; lišta ukládá jednotlivé volby; odvolání na /cookies smaže měřicí cookies. Test `src/test/consent.test.ts`.
