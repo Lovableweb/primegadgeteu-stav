@@ -16,7 +16,7 @@
 </head>
 <body>
 <h1>PrimeGadget EU — stav projektu</h1>
-<p class="meta"><strong>Poslední aktualizace:</strong> 4. 10. 2026 3:01:38 (Europe/Prague)</p>
+<p class="meta"><strong>Poslední aktualizace:</strong> 4. 10. 2026 3:49:08 (Europe/Prague)</p>
 <pre>## NEŽ ZAČNEŠ HLEDAT
 **VŽDY nejdřív `memory/JAK-PRACUJEME.md` + `memory/DALSI-KROKY.md`** (rychlá vrstva 0, extrémně krátké). Podle typu úkolu pak `memory/INDEX.md` → příslušný tematický soubor (vrstva 1 mapa podle frekvence / vrstva 2 tematické moduly). Teprve pak — pokud to nestačí — sekce **MAPA PROJEKTU** níže a zbytek `CLAUDE.md`. Archiv (`memory/archiv-*.md`) čti jen na explicitní dotaz na historii. Když vytvoříš nový důležitý soubor, doplň ho do mapy (`CLAUDE.md` i případně `memory/mapa-caste.md`/`mapa-vzacne.md`).
 
@@ -283,6 +283,7 @@ Headless screenshot (mobil 375 / desktop 1440) si dělat sám JEN když:
 **Admin email**: (skryt z veřejného gistu — Claude ho zná z interní paměti)
 
 ### Hotové funkce:
+- 2026-10-04 **Patička černá a vycentrovaná** (`layout/Footer.tsx`): `bg-black`, značka nahoře uprostřed, 4 sloupce odkazů na střed (desktop vedle sebe / tablet 2×2 / mobil pod sebou), newsletter a copyright + platby uprostřed. Ověřeno 390/768/1440 px.
 - 2026-10-04 **Rádio kompletně odstraněno** (rozhodnutí Jirky): smazány `layout/RadioPlayer.tsx`, `RadioPlayerLive.tsx`, `lib/radioSingleton.ts`, test, ambientní autoplay v `App.tsx`, animace `equalize` v tailwindu, klíče `radio.*` ve 14 jazycích, SomaFM z CSP (`public/_headers`). Hlavička ověřena na 390/768/1024/1440 px. Starší záznamy o rádiu níže jsou jen historie.
 - 2026-10-04 **Měřicí kódy jen se souhlasem z cookie lišty (GDPR)**: `src/lib/consent.ts` + `initPixels(consent)` — GA4 = analytika, TikTok = marketing, Meta Pixel = analytika I marketing; lišta ukládá jednotlivé volby; odvolání na /cookies smaže měřicí cookies. Test `src/test/consent.test.ts`.
 - 2026-10-04 **Karusel na mobilu bez poskakování**: oba slidy stejně vysoké (výška PS5, min. 560 px) → obsah pod karuselem se při přepnutí neposouvá; po otočení telefonu se karusel správně zmenší. Posuny rozvržení za 30 s 0,064 → 0,009 (ráno 0,184). Viz pravidlo 7.
