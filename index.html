@@ -16,7 +16,7 @@
 </head>
 <body>
 <h1>PrimeGadget EU — stav projektu</h1>
-<p class="meta"><strong>Poslední aktualizace:</strong> 4. 10. 2026 11:40:35 (Europe/Prague)</p>
+<p class="meta"><strong>Poslední aktualizace:</strong> 4. 10. 2026 13:43:04 (Europe/Prague)</p>
 <pre>## NEŽ ZAČNEŠ HLEDAT
 **VŽDY nejdřív `memory/JAK-PRACUJEME.md` + `memory/DALSI-KROKY.md`** (rychlá vrstva 0, extrémně krátké). Podle typu úkolu pak `memory/INDEX.md` → příslušný tematický soubor (vrstva 1 mapa podle frekvence / vrstva 2 tematické moduly). Teprve pak — pokud to nestačí — sekce **MAPA PROJEKTU** níže a zbytek `CLAUDE.md`. Archiv (`memory/archiv-*.md`) čti jen na explicitní dotaz na historii. Když vytvoříš nový důležitý soubor, doplň ho do mapy (`CLAUDE.md` i případně `memory/mapa-caste.md`/`mapa-vzacne.md`).
 
@@ -130,6 +130,7 @@ Rychlá orientace, ať se neprochází celý repo. Cesty jsou od kořene (`src/.
 - `src/integrations/supabase/client.ts` — Supabase klient (jediné napojení na DB). **Kód běžící při startu** (kontexty, hooky v App/Header) ho NEIMPORTUJE napřímo, ale přes `getSupabase()` z `src/integrations/supabase/lazy.ts` (jinak se 42 kB vrátí do startu; build to zablokuje `check-bundle.cjs`). Stránky a lazy komponenty mohou importovat `client.ts` přímo.
 - `src/i18n/locales/*.json` — překlady 14 jazyků (1 soubor = 1 jazyk, lazy); `src/i18n/translations.ts` — jen loader (`loadTranslations`, `LANGUAGES`); `src/main.tsx` načte zvolený jazyk před prvním renderem.
 - `src/lib/overlayGate.ts` — **plovoucí prvky (maskot chatbota, cenová bublina, prodejní popup, „právě koupil", hlášky o odznacích) až po rozhodnutí v cookie liště a postupně** (`OVERLAY_DELAY`, `whenOverlayAllowed`/`useOverlayAllowed`); nový plovoucí prvek zapoj sem s vlastním zpožděním. Test `src/test/overlayGate.test.ts`.
+- `src/lib/reportClientError.ts` — hlášení chyb do admin Hlídače (js/promise/payment + slow, not_found, image); závažnost a vyřešené řeší DB (`admin_error_stats`, `admin_set_error_resolved`, `admin_error_poll` — migrace `20261004150000_error_watch.sql`), UI `components/admin/WatchTab.tsx`. Nový druh chyby = `reportClientError(kind, …)` + případně pravidlo v `site_error_severity`.
 - `src/config/socialLinks.ts` — adresy sociálních sítí v patičce (prázdné = skryté).
 - `src/lib/toast.ts` — **hlášky VŽDY importovat odsud** (`import { toast } from "@/lib/toast"`), NIKDY přímo ze `"sonner"` (vrátilo by 32 kB do startovního kódu; build to zablokuje `check-bundle.cjs`). Zobrazení: `components/ui/LazyToasters.tsx`.
 - `src/hooks/useSeo.ts` — title/description/canonical/OG/robots per stránka (každá veřejná stránka ho volá; neveřejné `noindex`).
