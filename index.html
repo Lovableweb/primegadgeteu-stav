@@ -16,7 +16,7 @@
 </head>
 <body>
 <h1>PrimeGadget EU — stav projektu</h1>
-<p class="meta"><strong>Poslední aktualizace:</strong> 4. 10. 2026 19:17:20 (Europe/Prague)</p>
+<p class="meta"><strong>Poslední aktualizace:</strong> 5. 10. 2026 3:31:11 (Europe/Prague)</p>
 <pre>## NEŽ ZAČNEŠ HLEDAT
 **VŽDY nejdřív `memory/JAK-PRACUJEME.md` + `memory/DALSI-KROKY.md`** (rychlá vrstva 0, extrémně krátké). Podle typu úkolu pak `memory/INDEX.md` → příslušný tematický soubor (vrstva 1 mapa podle frekvence / vrstva 2 tematické moduly). Teprve pak — pokud to nestačí — sekce **MAPA PROJEKTU** níže a zbytek `CLAUDE.md`. Archiv (`memory/archiv-*.md`) čti jen na explicitní dotaz na historii. Když vytvoříš nový důležitý soubor, doplň ho do mapy (`CLAUDE.md` i případně `memory/mapa-caste.md`/`mapa-vzacne.md`).
 
@@ -131,6 +131,7 @@ Rychlá orientace, ať se neprochází celý repo. Cesty jsou od kořene (`src/.
 - `src/i18n/locales/*.json` — překlady 14 jazyků (1 soubor = 1 jazyk, lazy); `src/i18n/translations.ts` — jen loader (`loadTranslations`, `LANGUAGES`); `src/main.tsx` načte zvolený jazyk před prvním renderem.
 - `src/lib/overlayGate.ts` — **plovoucí prvky (maskot chatbota, cenová bublina, prodejní popup, „právě koupil", hlášky o odznacích) až po rozhodnutí v cookie liště a postupně** (`OVERLAY_DELAY`, `whenOverlayAllowed`/`useOverlayAllowed`); nový plovoucí prvek zapoj sem s vlastním zpožděním. Test `src/test/overlayGate.test.ts`.
 - `src/lib/reportClientError.ts` — hlášení chyb do admin Hlídače (js/promise/payment + slow, not_found, image); závažnost a vyřešené řeší DB (`admin_error_stats`, `admin_set_error_resolved`, `admin_error_poll` — migrace `20261004150000_error_watch.sql`), UI `components/admin/WatchTab.tsx`. Nový druh chyby = `reportClientError(kind, …)` + případně pravidlo v `site_error_severity`.
+- `src/lib/pricing.ts` — **ceny produktů na JEDNOM místě**: ceny v `data/products.ts` i v DB (`price_czk`, admin) jsou ZÁKLADNÍ, `withRetailPrice` z nich dělá prodejní (`price`/`originalPrice` +25 %, základ v `basePrice`), `levelPrice` kus/paleta/kamion. Přirážku nikdy nepočítat v komponentě; edge `product-feed` má kopii `RETAIL_MARKUP` (měnit spolu). Test `src/test/pricing.test.ts`.
 - `src/lib/catalogSync.ts` — **katalog na webu ← admin Produkty** (tabulka `products`): nové produkty z adminu se přidají, úpravy fotky/ceny/názvu se použijí jen když jsou novější než `STATIC_CATALOG_UPDATED_AT` (po ruční úpravě `data/products.ts` ho přepiš na aktuální čas). Předgenerované HTML je ze statického katalogu. Test `src/test/catalogSync.test.ts`.
 - `src/lib/uuid.ts` — **náhodné UUID VŽDY přes `uuid()`**, nikdy `crypto.randomUUID` (na http://192.168.x.x chybí → pád; ESLint ho zakazuje).
 - `src/config/socialLinks.ts` — adresy sociálních sítí v patičce (prázdné = skryté).
@@ -288,6 +289,7 @@ Headless screenshot (mobil 375 / desktop 1440) si dělat sám JEN když:
 **Admin email**: (skryt z veřejného gistu — Claude ho zná z interní paměti)
 
 ### Hotové funkce:
+- 2026-10-05 **Jedna prodejní cena všude** (`lib/pricing.ts`): katalog i DB drží základ, zákazník všude vidí a platí základ +25 % (i přeškrtnutá cena, Flash Sale, bannery, chatbot, košík, feed). Opraveno: PS5 Pro měla přeškrtnutou cenu nižší než aktuální a jinde jinou cenu. Pojistka `src/test/pricing.test.ts`.
 - 2026-10-04 **Admin Produkty → web**: `lib/catalogSync.ts` promítá tabulku `products` do katalogu (nové produkty z adminu se přidají; úpravy fotky/ceny/názvu se projeví, když jsou novější než `STATIC_CATALOG_UPDATED_AT`). Galerie produktů v adminu opravena (`product_media.product_id` → TEXT, migrace `20261004170000_product_media_text_id.sql`). Uživatelské menu bez „Moje objednávky“, „MŮJ ÚČET“/„OBLÍBENÉ“ velkými. Hlídač chyb (migrace `20261004150000_error_watch.sql`) ověřen v ostré DB.
 - 2026-10-04 **Úpravy po auditu živého webu**: na mobilu nic plovoucího před rozhodnutím o cookies a pak postupně (`lib/overlayGate.ts`), kompaktní cookie lišta (171 px na 390×844), přeložené hlášky odznaků/misí, `sr-only` H1 na homepage, alt/aria-label (košík, menu, chat, hvězdičky, vlajky, ± u produktu; Playwright sken 0 nálezů), sociální sítě v patičce skryté do doplnění `config/socialLinks.ts`.
 - 2026-10-04 **Patička černá a vycentrovaná** (`layout/Footer.tsx`): `bg-black`, značka nahoře uprostřed, 4 sloupce odkazů na střed (desktop vedle sebe / tablet 2×2 / mobil pod sebou), newsletter a copyright + platby uprostřed. Ověřeno 390/768/1440 px.
