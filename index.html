@@ -16,7 +16,7 @@
 </head>
 <body>
 <h1>PrimeGadget EU — stav projektu</h1>
-<p class="meta"><strong>Poslední aktualizace:</strong> 10. 10. 2026 5:55:04 (Europe/Prague)</p>
+<p class="meta"><strong>Poslední aktualizace:</strong> 10. 10. 2026 6:08:26 (Europe/Prague)</p>
 <pre>## NEŽ ZAČNEŠ HLEDAT
 **VŽDY nejdřív `memory/JAK-PRACUJEME.md` + `memory/DALSI-KROKY.md`** (rychlá vrstva 0, extrémně krátké). Podle typu úkolu pak `memory/INDEX.md` → příslušný tematický soubor (vrstva 1 mapa podle frekvence / vrstva 2 tematické moduly). Teprve pak — pokud to nestačí — sekce **MAPA PROJEKTU** níže a zbytek `CLAUDE.md`. Archiv (`memory/archiv-*.md`) čti jen na explicitní dotaz na historii. Když vytvoříš nový důležitý soubor, doplň ho do mapy (`CLAUDE.md` i případně `memory/mapa-caste.md`/`mapa-vzacne.md`).
 
@@ -290,7 +290,7 @@ Headless screenshot (mobil 375 / desktop 1440) si dělat sám JEN když:
 **Admin email**: (skryt z veřejného gistu — Claude ho zná z interní paměti)
 
 ### Hotové funkce:
-- 2026-10-10 **Úklid dlaždic + Flash Sale + sticky lišta + návrat na místo**: smazáno 16 starých produktů (DB, seed; dji-air i z kódu + balíček drone-kit), Flash Sale 10 produktů se skutečnými slevami 10–20 %, Naposledy prohlížené vycentrované se šipkami (3 stránky), návrat z detailu na stejnou pozici (`useScrollRestoration` průběžně + dotlačení, `ProductGrid` pamatuje počet karet), sticky hlavička přes `overflow-x: clip` místo hidden + `modal={false}` u menu v liště. **Pravidlo: nikdy `overflow-x: hidden` na html/body/#root ani obalu stránky (rozbije sticky hlavičku) — používat `overflow-x-clip`.** ⏳ Nasadit platební funkce s novým ceníkem.
+- 2026-10-10 **Úklid dlaždic + Flash Sale + sticky lišta + návrat na místo**: smazáno 16 starých produktů (DB, seed; dji-air i z kódu + balíček drone-kit), Flash Sale 10 produktů se skutečnými slevami 10–20 %, Naposledy prohlížené vycentrované se šipkami (3 stránky), návrat z detailu na stejnou pozici (`useScrollRestoration` průběžně + dotlačení, `ProductGrid` pamatuje počet karet), sticky hlavička přes `overflow-x: clip` místo hidden + `modal={false}` u menu v liště. **Pravidlo: nikdy `overflow-x: hidden` na html/body/#root ani obalu stránky (rozbije sticky hlavičku) — používat `overflow-x-clip`.** Platební funkce nasazeny s novým ceníkem (`create-payment` v24, Comgate v20).
 - 2026-10-05 **Produkty z BigBuy + přirážka 30 %**: 22 karet (ovladače Turtle Beach/Xbox, Nintendo Switch 2, Joy-Con, Pro ovladače, HORI volant) místo parfémů a telefonů; jedna fotka zepředu přímo z BigBuy, evropské ceny, texty ve 14 jazycích. Přirážka za kus 30 % na webu i na serveru (`lib/pricing.ts` = `_shared/orderPricing.ts`).
 - 2026-10-05 **Tech Hub = Titan Path XP**: Tech Hub bere XP i level z DB (`titan_progress`), názvy úrovní vždy z překladů `th.level.N` přes `lib/titanLevels.ts` (`titanLevelTitle`), ne z `titan_levels.title` (jen česky). Po propsání herních XP (`lib/titanXp.ts`) se pošle událost a `useTitanPath` se obnoví.
 - 2026-10-05 **Vyhledávání produktů**: lupa v hlavičce → `components/layout/HeaderSearch.tsx` (lazy, návrhy), výsledky na homepage `/?q=…` (`pages/Index.tsx`), logika `lib/productSearch.ts` (bez diakritiky, přeložený i český název; test `productSearch.test.ts`). Karta hráče počítá kupóny z `reward_coupons`. Testy `adminTraffic` mají pevné datum (fixtury z 4. 10.).
