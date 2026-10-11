@@ -16,9 +16,9 @@
 </head>
 <body>
 <h1>PrimeGadget EU — stav projektu</h1>
-<p class="meta"><strong>Poslední aktualizace:</strong> 11. 10. 2026 20:22:47 (Europe/Prague)</p>
+<p class="meta"><strong>Poslední aktualizace:</strong> 11. 10. 2026 20:38:24 (Europe/Prague)</p>
 <pre>## NEŽ ZAČNEŠ HLEDAT
-**VŽDY nejdřív `memory/JAK-PRACUJEME.md` + `memory/DALSI-KROKY.md`** (rychlá vrstva 0, extrémně krátké). Podle typu úkolu pak `memory/INDEX.md` → příslušný tematický soubor (vrstva 1 mapa podle frekvence / vrstva 2 tematické moduly). Teprve pak — pokud to nestačí — sekce **MAPA PROJEKTU** níže a zbytek `CLAUDE.md`. Archiv (`memory/archiv-*.md`) čti jen na explicitní dotaz na historii. Když vytvoříš nový důležitý soubor, doplň ho do mapy (`CLAUDE.md` i případně `memory/mapa-caste.md`/`mapa-vzacne.md`).
+**VŽDY nejdřív `memory/JAK-PRACUJEME.md` + `memory/DALSI-KROKY.md`** (rychlá vrstva 0, extrémně krátké). Podle typu úkolu pak `memory/INDEX.md` → příslušný tematický soubor (vrstva 1 mapa podle frekvence / vrstva 2 tematické moduly). Teprve pak — pokud to nestačí — stručná **MAPA PROJEKTU** níže, plná mapa `memory/mapa-projektu.md` a zbytek `CLAUDE.md`. Archiv (`memory/archiv-*.md`) čti jen na explicitní dotaz na historii. Když vytvoříš nový důležitý soubor, doplň ho do plné mapy `memory/mapa-projektu.md` (do stručné mapy níže jen když jde o často používané místo).
 
 ## PRVNÍ KROK KAŽDÉ SESSION (startup kontrola)
 Než cokoliv uděláš:
@@ -31,7 +31,7 @@ Než cokoliv uděláš:
 Vedle CLAUDE.md je trvalý deník práce `PAMET_PROJEKTU.md` (nejnovější záznam nahoře). Platí NATRVALO:
 1. **Po dokončení Režimu B (uzavření) AUTOMATICKY přidej nový datovaný záznam** do `PAMET_PROJEKTU.md` (nejnovější nahoře): co se udělalo, které soubory, výsledek/poznámka. Nečekej na výzvu uživatele.
 2. **Po každém takovém zápisu rovnou `commit` + `push`** na GitHub.
-3. **Po větší změně přidej řádek do `memory/hotove-funkce.md`** (nejnovější nahoře) a případně uprav MAPU v `CLAUDE.md`. Do `CLAUDE.md` samotného patří jen to, co je potřeba při KAŽDÉ session (mapa, pravidla) — historie ne.
+3. **Po větší změně přidej řádek do `memory/hotove-funkce.md`** (nejnovější nahoře) a případně uprav mapu (`memory/mapa-projektu.md`). Do `CLAUDE.md` samotného patří jen to, co je potřeba při KAŽDÉ session (mapa, pravidla) — historie ne.
 
 ## Synchronizace a veřejný stav
 `CLAUDE.md` je zrcadlený na dvou veřejných místech, aby šel číst i z mobilu (obojí se řeší JEN v Režimu B, ne po každé drobné úpravě v Režimu A):
@@ -42,106 +42,19 @@ Obojí dělá AUTOMATICKY hook `.claude/hooks/push-claude-md.sh` po každém pus
 
 ---
 
-## MAPA PROJEKTU
-Rychlá orientace, ať se neprochází celý repo. Cesty jsou od kořene (`src/...`). UI primitiva (`src/components/ui/**`) a čisté typy se neuvádějí.
-
-### Stránky (`src/pages/`)
-- `Index.tsx` — homepage (skládá hero/carousel, produktovou mřížku, tlačítko nahoru); sem pro úpravy domovské stránky.
-- `ProductDetail.tsx` — detail produktu (galerie, recenze, cena, do košíku).
-- `Checkout.tsx` — pokladna (adresa, doprava, slevový kód, platba); sem pro objednávkový formulář.
-- `CheckoutSuccess.tsx` / `CheckoutCancel.tsx` — návrat z platební brány.
-- `MyOrders.tsx` — moje objednávky (dokončit platbu, faktura, objednat znovu, recenze po doručení).
-- `Account.tsx` — účet zákazníka `/muj-ucet` (osobní údaje + doručovací adresa do `profiles`).
-- `Wishlist.tsx` — oblíbené (banner slev).
-- `Compare.tsx` — porovnání produktů.
-- `TechHub.tsx` — herní/gamifikační hub (`.techhub-root`, font Oxanium).
-- `TitanPath.tsx` — Titan Path XP/level systém (ze Supabase nákupů).
-- `TrackOrder.tsx` — sledování zásilky podle čísla.
-- `ResetPassword.tsx` — reset hesla. (Affiliate program byl 2026-07-11 kompletně odstraněn — stránka, route i logika v Checkoutu.)
-- `AdminDashboard.tsx` — admin (produkty, objednávky, reklamace, metriky).
-- `legal/*.tsx` — obchodní podmínky, GDPR, cookies, reklamace.
-- **Běžné úkoly → sem sáhni:** routing/nová stránka → `src/pageRoutes.ts` (jediný seznam rout; stránky přes `lib/lazyPage.tsx` kvůli přednačtení), `src/App.tsx` jen homepage a obal; úprava domovské stránky → `pages/Index.tsx`.
-
-### Komponenty homepage (`src/components/home/` + `layout/`)
-- `home/PromoCarousel.tsx` — karusel promo bannerů; **výška/poměr slidů se řeší JEN tady** (viewport).
-- `home/PS5PromoBanner.tsx` — slide PlayStation 5 (živý HTML text + ovladače).
-- `home/HeroBanners.tsx`, `home/VideoBanner.tsx` — hero a video bannery (videa v `public/*.mp4` jsou zmenšená 480p bez zvuku, originály lokálně v `.video-orig/`; plakáty `public/posters/`).
-- `home/HotDeals.tsx`, `home/VisitorCounter.tsx` — bloky homepage (akce, počítadlo návštěv).
-- `home/ShippingBadges.tsx` — důvěryhodnostní pás dopravců pod hero (PPL, DHL, Zásilkovna, DPD; desktop 4 sloupce / mobil 2×2, bez placených log).
-- `layout/Header.tsx` — hlavička (logo, hledání, košík, jazyk/měna, menu).
-- `layout/Footer.tsx`, `layout/MegaMenu.tsx`, `layout/UserMenu.tsx` — patička, kategorie, uživatelské menu.
-- `layout/CurrencySwitcher.tsx` + `src/context/LocalizationContext.tsx` — přepínač měn a kurzy/symboly/formát ceny.
-- `layout/DeferredMenu.tsx` — menu v hlavičce (měna, jazyk) bez Radixu ve startu: tlačítko hned, Radix menu (`CurrencyMenu.tsx`/`LocaleMenu.tsx`) až při interakci. Úpravy položek menu dělat v `*Menu.tsx`, vzhled tlačítka v `*Switcher.tsx`.
-- `layout/LocaleSwitcher.tsx`, `layout/Clock.tsx`, `layout/ServerStatus.tsx` — jazyk, hodiny, stav serveru. (Rádio bylo 2026-10-04 na přání Jirky úplně odstraněno — přehrávač, ambientní autoplay v App.tsx, překlady `radio.*`, CSP pro SomaFM.)
-- **Běžné úkoly → sem sáhni:** úprava promo banneru → `home/PromoCarousel.tsx` + konkrétní slide (`PS5PromoBanner`); měny → `layout/CurrencySwitcher.tsx` + `context/LocalizationContext.tsx`.
-
-### AI / chatbot „Gadget" (`src/components/ai/`)
-- `AIShowman.tsx` — hlavní chatbot widget (AKTIVNÍ verze); sem pro chování/UI chatbota.
-- `aiShowman/ChatView.tsx`, `ChatInput.tsx`, `constants.ts`, `useChatApi.ts`, `utils.ts` — vnitřní části aktivního chatbota: `ChatView` (zprávy + přehrání zprávy hlasem), `ChatInput` (textarea + emoji picker + odeslání), marker `&lt;PRODUCTS&gt;` produktové karty.
-- `aiShowman/FaqView.tsx`, `TrackView.tsx` — FAQ a sledování zásilky v chatu.
-- `GadgetFace.tsx` — SVG obličej Gadgeta; `QuickReplies.tsx` — rychlé odpovědi/vtipy (14 jazyků).
-- `SalesBrainBot.tsx` — prodejní popup; `ProductQuiz.tsx` — kvíz doporučení produktu.
-- `ReclamationModal.tsx`, `EscalationModal.tsx` — reklamace/eskalace z chatu.
-- `ChatMessageList.tsx` — POZOR: mrtvá/stará verze, needituj (aktivní je `aiShowman/`).
-- `src/lib/offlineResponses.ts` — offline odpovědi 30+ kategorií; `src/lib/chatMemory.ts`, `chatbotActions.ts` — paměť a akce bota.
-- `src/hooks/useDictation.ts` — diktování do textového pole s živým přepisem (Web Speech API `SpeechRecognition`, `interimResults: true`), zapojeno v `aiShowman/ChatInput.tsx` (ikona mikrofonu vedle emoji smajlíka). Bez návaznosti na odeslání/AI — jen plní pole.
-- **Běžné úkoly → sem sáhni:** chování chatbota → `ai/AIShowman.tsx` + `ai/aiShowman/`; serverová logika → `supabase/functions/claude-chat/` nebo `ai-showman/`; offline texty → `lib/offlineResponses.ts`; diktování do pole → `hooks/useDictation.ts` + `aiShowman/ChatInput.tsx`.
-
-### Tech Hub / gamifikace (`src/components/techhub/`)
-- `PlayerCard.tsx` — karta hráče (fotka, jméno, flip na statistiky, živý avatar).
-- `TiltCard.tsx` — CSS 3D náklon/flip wrapper.
-- `ArcadeTab.tsx` — záložka her; hry: `MemoryGame.tsx` (pexeso), `TechQuizGame.tsx` (kvíz), `SlotMachineGame.tsx` (automat), `GhostHuntGame.tsx` (lov duchů).
-- `SpinWheelTab.tsx` — kolo štěstí; `RewardShopTab.tsx` — obchod (mince → slevové kódy); `AvatarGiftsTab.tsx` — avatary/dárky.
-- `LeaderboardTab.tsx`, `SeasonalEventsTab.tsx`, `LootBoxCard/Modal.tsx`, `StreakBonusCard.tsx`, `MiningIndicator.tsx` — žebříček, eventy, loot boxy, série, těžba mincí.
-- Sdílené: `src/lib/walletLocal.ts` + `hooks/useLocalBalance.ts` (mince/XP localStorage), `hooks/useTechHub.ts`, `lib/playerProfile.ts`, `lib/titanXp.ts` + `hooks/useTitanPath.ts` (Titan Path ze Supabase).
-- **Běžné úkoly → sem sáhni:** nová hra → `techhub/ArcadeTab.tsx` + nová `*Game.tsx`; mince/odměny → `lib/walletLocal.ts` + `hooks/useLocalBalance.ts`; Titan XP z nákupů → `lib/titanXp.ts` + `hooks/useTitanPath.ts`.
-
-### Pokladna / objednávky / účet
-- `pages/Checkout.tsx` — formulář pokladny; `components/checkout/ZasilkovnaWidget.tsx` — výběr výdejního místa.
-- `components/cart/CartDrawer.tsx`, `CartProgressSection.tsx` + `src/context/CartContext.tsx` — košík a jeho stav.
-- `pages/MyOrders.tsx`, `pages/Account.tsx` — objednávky a účet (viz Stránky).
-- `components/auth/AuthModal.tsx` — přihlášení/registrace/obnova hesla (otevírá se z `layout/Header.tsx`); `context/AuthContext.tsx` — signUp/signIn/signOut/resetPassword/updatePassword; `pages/ResetPassword.tsx` — nastavení nového hesla z e-mailu. Registrace zakládá profil přes DB trigger `on_auth_user_created` → `handle_new_user`.
-- Hooky: `useProducts.ts`, `useAbandonedCart.ts`, `useWishlist.ts`, `useShipmentTracking.ts`.
-- **Běžné úkoly → sem sáhni:** platba → `supabase/functions/create-payment/` (Stripe) nebo `create-payment-comgate/`; výdejní místo → `checkout/ZasilkovnaWidget.tsx`; obsah košíku → `context/CartContext.tsx`; přihlášení/registrace → `components/auth/AuthModal.tsx` + `context/AuthContext.tsx`.
-
-### Recenze (`src/components/reviews/`)
-- `ProductReviews.tsx` — výpis recenzí u produktu; `ReviewForm.tsx` — formulář; `ReviewCard.tsx` — karta recenze (odznak ověřeného nákupu); `StarRating.tsx` — hvězdičky.
-- `OrderItemReview.tsx` — hodnocení produktu z doručené objednávky (`verified_purchase`); `hooks/useReviews.ts`, `context/ReviewSummaryContext.tsx` — data a souhrn hvězd na kartách.
-- **Běžné úkoly → sem sáhni:** zobrazení/odeslání recenze → `reviews/` + `hooks/useReviews.ts`.
-
-### Edge Functions (`supabase/functions/`)
-- `claude-chat/` — backend chatbota přes Claude API (POZOR na `verify_jwt` vs publishable klíče); `ai-showman/` — starší/alternativní AI funkce.
-- `create-payment/` — Stripe platba; `create-payment-comgate/` — Comgate (CZ); `stripe-webhook/` — potvrzení platby.
-- `_shared/orderPricing.ts` — **jediný výpočet ceny objednávky** (pokladna i platební funkce; přirážky, doprava, kupóny, kurzy, VIP); `_shared/verifyOrder.ts` — server ověří objednávku z DB (ceny proti katalogu, Titan sleva z DB, částka musí sedět); `_shared/catalogData.ts` — vygenerované základní ceny katalogu; `scripts/sync-static-catalog.cjs` — převezme úpravy produktů z adminu do `data/products.ts` (+ smaže staré překlady, přegeneruje catalogData) (`node scripts/gen-payment-catalog.cjs` po KAŽDÉ změně `data/products.ts`/`data/bundles.ts`/`data/combos.ts`, hlídá `src/test/orderPricing.test.ts`).
-- `track-shipment/` — sledování zásilky; `generate-invoice/` — HTML faktura; `send-email/` — odchozí e-maily (Resend); `product-feed/` — feed pro Heureka/Google Shopping; `tts/` — text-to-speech.
-- **Běžné úkoly → sem sáhni:** platba → `create-payment*/`; e-maily → `send-email/`; faktura → `generate-invoice/`. Nasazení přes Supabase MCP na projekt `obujmjhlxbbsztfivros`.
-
-### Skripty / hooky (`scripts/`, `.claude/`)
-- `scripts/check-secrets.cjs` — sken staged souborů na tajemství (napojen v `.husky/pre-commit`).
-- `scripts/gen-stav-page.cjs` — generuje veřejnou stránku stavu z CLAUDE.md; `scripts/db-healthcheck.sql` — DB smoke-test.
-- `scripts/sync-mirror.sh` — kanonické srovnání veřejného zrcadla (Pages stránka + gist) s CLAUDE.md; volá ho git `pre-push` hook (`.husky/pre-push`) → běží při KAŽDÉM pushi nezávisle na CWD Claude Code (pojistka proti zaseknutému mirroru i při práci mimo složku projektu). Idempotentní, best-effort. Ruční spuštění: `sh scripts/sync-mirror.sh`.
-- `scripts/start-dev.bat` — spuštění dev serveru (localhost:8080).
-- `scripts/prerender.cjs` + `prerender-guard.cjs` — **předgenerování veřejných stránek** při buildu (postbuild): homepage, `/magazin`, články a všech 49 produktů (seznam adres ze `scripts/site-data.cjs`, stejný jako sitemapa) → `dist/&lt;cesta&gt;/index.html`. Headless Chrome vezme HTML z prvního commitu Reactu (`window.__PRERENDER__` v `src/main.tsx`) + SEO značky a JSON-LD z `&lt;head&gt;`. Build spadne, když stránka neprojde kontrolou (špatný canonical, noindex, únik adresy build serveru — v SEO/structured data vždy `SITE_URL`, nikdy `window.location.origin`). Inline pojistky: jiná adresa než `/` nebo uložený jiný jazyk/měna než cs/CZK → obsah se před vykreslením smaže (čistá SPA). Prvky s `data-no-prerender` (cookie lišta) se vynechají. Každý ze 4 souběžných pracovníků má vlastní Chrome a při chybě Chromu (náhodné „Session with given id not found") ho restartuje a stránku zkusí znovu (max 3 pokusy). Bez Chromu na build stroji se krok jen přeskočí (`CHROME_PATH`, `SKIP_PRERENDER=1`). Výška PS5 slidu na mobilu jde přes CSS proměnnou `--promo-h` (`PromoCarousel.tsx`) — měnit jen spolu s `prerender-guard.cjs`. Testy: `src/test/prerenderGuard.test.ts`, `src/test/lazyPage.test.tsx`. Lokální náhled předgenerovaných podstránek: `npm run preview` (plugin `previewPrerendered` ve `vite.config.ts`).
-- `.claude/hooks/push-claude-md.sh` / `pull-claude-md.sh` — obousměrná synchronizace CLAUDE.md + gist + Pages; `.claude/sync-gist.txt` — ID gistu.
-- **Běžné úkoly → sem sáhni:** veřejná nástěnka → `scripts/gen-stav-page.cjs` + hook `push-claude-md.sh`; ochrana tajemství → `scripts/check-secrets.cjs`.
-
-### Sdílené lib / hooks / context (`src/lib/`, `src/hooks/`, `src/context/`)
-- Context: `CartContext.tsx` (košík), `AuthContext.tsx` (přihlášení), `LocalizationContext.tsx` (jazyk/měna), `ReviewSummaryContext.tsx` (souhrn recenzí).
-- `src/integrations/supabase/client.ts` — Supabase klient (jediné napojení na DB). **Kód běžící při startu** (kontexty, hooky v App/Header) ho NEIMPORTUJE napřímo, ale přes `getSupabase()` z `src/integrations/supabase/lazy.ts` (jinak se 42 kB vrátí do startu; build to zablokuje `check-bundle.cjs`). Stránky a lazy komponenty mohou importovat `client.ts` přímo.
-- `src/i18n/locales/*.json` — překlady 14 jazyků (1 soubor = 1 jazyk, lazy); `src/i18n/translations.ts` — jen loader (`loadTranslations`, `LANGUAGES`); `src/main.tsx` načte zvolený jazyk před prvním renderem.
-- `src/lib/overlayGate.ts` — **plovoucí prvky (maskot chatbota, cenová bublina, prodejní popup, „právě koupil", hlášky o odznacích) až po rozhodnutí v cookie liště a postupně** (`OVERLAY_DELAY`, `whenOverlayAllowed`/`useOverlayAllowed`); nový plovoucí prvek zapoj sem s vlastním zpožděním. Test `src/test/overlayGate.test.ts`.
-- `src/lib/reportClientError.ts` — hlášení chyb do admin Hlídače (js/promise/payment + slow, not_found, image); závažnost a vyřešené řeší DB (`admin_error_stats`, `admin_set_error_resolved`, `admin_error_poll` — migrace `20261004150000_error_watch.sql`), UI `components/admin/WatchTab.tsx`. Nový druh chyby = `reportClientError(kind, …)` + případně pravidlo v `site_error_severity`.
-- `src/lib/pricing.ts` — **ceny produktů na JEDNOM místě**: ceny v `data/products.ts` i v DB (`price_czk`, admin) jsou ZÁKLADNÍ, `withRetailPrice` z nich dělá prodejní (`price`/`originalPrice` +30 % (od 2026-10-05; přirážky musí sedět s `_shared/orderPricing.ts`), základ v `basePrice`), `levelPrice` kus/paleta/kamion. Přirážku nikdy nepočítat v komponentě; edge `product-feed` má kopii `RETAIL_MARKUP` (měnit spolu). Test `src/test/pricing.test.ts`.
-- `src/lib/catalogSync.ts` — **katalog na webu ← admin Produkty** (tabulka `products`): nové produkty z adminu se přidají, úpravy fotky/ceny/názvu se použijí jen když jsou novější než `STATIC_CATALOG_UPDATED_AT` (po ruční úpravě `data/products.ts` ho přepiš na aktuální čas). Předgenerované HTML je ze statického katalogu. Test `src/test/catalogSync.test.ts`.
-- `src/lib/uuid.ts` — **náhodné UUID VŽDY přes `uuid()`**, nikdy `crypto.randomUUID` (na http://192.168.x.x chybí → pád; ESLint ho zakazuje).
-- `src/config/socialLinks.ts` — adresy sociálních sítí v patičce (prázdné = skryté).
-- `src/lib/toast.ts` — **hlášky VŽDY importovat odsud** (`import { toast } from "@/lib/toast"`), NIKDY přímo ze `"sonner"` (vrátilo by 32 kB do startovního kódu; build to zablokuje `check-bundle.cjs`). Zobrazení: `components/ui/LazyToasters.tsx`.
-- `src/hooks/useSeo.ts` — title/description/canonical/OG/robots per stránka (každá veřejná stránka ho volá; neveřejné `noindex`).
-- `src/lib/productMediaLoader.ts` — dávkové načítání galerie produktů (1 dotaz místo N; ne-UUID katalogová ID se do DB neposílají).
-- `src/components/ui/LazyMount.tsx` — odložené připojení sekcí homepage (při přiblížení / v nečinnosti).
-- lib: `consent.ts` (souhlas s cookies — **měřicí kódy jen přes `initPixels(getConsent())`**, nikdy bez souhlasu), `analytics.ts`/`pixelTracking.ts` (měření), `salesPsychology.ts`/`customerPsychology.ts`/`upsellEngine.ts` (konverze), `voiceTts.ts` (TTS), `productMapper.ts` (mapování produktů), `emailCommandSystem.ts`/`emailReportSystem.ts` (e-mailové akce).
-- hooks: `useProducts.ts`, `useWishlist.ts`, `useReviews.ts`, `useAdminProducts/Orders.ts`, `useNotifications.ts`/`useRealtimeNotifications.ts`, `useRecentlyViewed.ts`, `useScrollRestoration.ts` (obecná scroll restoration, napojená v `components/ScrollToTop.tsx`).
-- **Běžné úkoly → sem sáhni:** dotaz do DB → `integrations/supabase/client.ts` + příslušný `hooks/use*.ts`; překlad/jazyk → `i18n/locales/*.json` (+ `scripts/add-i18n-key.cjs`) + `context/LocalizationContext.tsx`; SEO stránky → `hooks/useSeo.ts`, sitemap → `scripts/gen-sitemap.cjs` (běží sám před buildem).
+## MAPA PROJEKTU (stručná)
+Jen nejčastější místa, cesty od kořene `src/`. **Plná mapa všech souborů je v `memory/mapa-projektu.md`** — otevři ji (nebo v ní hledej přes Grep) vždy, když tu soubor nenajdeš nebo saháš na méně obvyklou část.
+- **Stránky a routy**: `pages/*.tsx`; jediný seznam rout `pageRoutes.ts` (stránky přes `lib/lazyPage.tsx`); homepage `pages/Index.tsx`.
+- **Homepage a hlavička**: `components/home/` (`PromoCarousel.tsx` — výška slidů JEN tady, `PS5PromoBanner.tsx`, `HeroBanners.tsx`); `components/layout/` (`Header.tsx`, `Footer.tsx`, položky menu měny/jazyka v `*Menu.tsx`).
+- **Chatbot „Gadget"**: `components/ai/AIShowman.tsx` + `ai/aiShowman/` (AKTIVNÍ); `ai/ChatMessageList.tsx` je mrtvá verze, needituj; backend `supabase/functions/claude-chat/`.
+- **Tech Hub**: `components/techhub/`, `pages/TechHub.tsx`; mince `lib/walletLocal.ts`, Titan XP `lib/titanXp.ts`.
+- **Pokladna, košík, účet**: `pages/Checkout.tsx`, `context/CartContext.tsx`, `pages/MyOrders.tsx`, `pages/Account.tsx`, `components/auth/AuthModal.tsx` + `context/AuthContext.tsx`.
+- **Recenze**: `components/reviews/` + `hooks/useReviews.ts`.
+- **Ceny**: `lib/pricing.ts` (web) a `supabase/functions/_shared/orderPricing.ts` (objednávka) — jediná místa výpočtu.
+- **Edge Functions**: `supabase/functions/` (`create-payment*/`, `stripe-webhook/`, `send-email/`, `generate-invoice/`, `product-feed/`); nasazení přes Supabase MCP na `obujmjhlxbbsztfivros`.
+- **Překlady**: `i18n/locales/*.json` (14 jazyků) + `context/LocalizationContext.tsx`.
+- **Admin**: `pages/AdminDashboard.tsx`, `components/admin/`.
+- **Skripty a hooky**: `scripts/`, `.husky/`, `.claude/hooks/` (prerender, pojistky před commitem, zrcadlo nástěnky).
 
 ---
 
@@ -182,7 +95,7 @@ Jsi nejlepší dropshipping expert na světě. Ovládáš:
 - **Standardní kroky dělej automaticky** jako součást úkolu, ne jako věci na schválení — ale **jen v Režimu B** (viz 0b): úprava souborů a build/typecheck patří VŽDY, screenshot/zápis do `PAMET_PROJEKTU.md`/commit+push/regenerace nástěnky jen při uzavření.
 - Velký objem (např. překlady mnoha souborů) klidně commituj po bezpečných checkpointech, ale **pokračuj bez ptaní** až do konce.
 - **Zkomoleniny z hlasového vstupu** (Jirka často diktuje z mobilu): vyber nejpravděpodobnější výklad, nezastavuj se kvůli tomu s dotazem — zvolený výklad zapiš do reportu do bloku „Předpoklady, které jsem zvolil".
-- **Než sáhneš na konkrétní soubor**, ověř jeho cestu proti MAPĚ PROJEKTU níže — cesty se v čase mění.
+- **Než sáhneš na konkrétní soubor**, ověř jeho cestu proti mapě (`memory/mapa-projektu.md`) — cesty se v čase mění.
 - **Mimo-úkolové postřehy** patří jen do bloku „Všiml jsem si navíc" v reportu — needěláš je automaticky (žádný scope creep).
 - **Oslovuj uživatele Jirko** (Jiří Smaluch) ve shrnutích i běžné komunikaci.
 - **Na startu úkolu zkontroluj `memory/DALSI-KROKY.md`** kvůli kolizím s právě rozdělanou prací.
@@ -204,21 +117,14 @@ Jsi nejlepší dropshipping expert na světě. Ovládáš:
 - **(b) Pojistka na startu KAŽDÉ nové session** — než se začne nový úkol, zkontroluj `git status` a jestli poslední session nezanechala neuzavřené změny (necommitnuté úpravy z Režimu A). Pokud ano, nejdřív dokonči Režim B za tu předchozí session, teprve pak začni nový úkol.
 
 Kroky uzavření (hromadně za všechny změny od posledního uzavření):
-1. Plné ověření (build, headless screenshot mobil ~375 i desktop ~1440 u vizuálních změn) — screenshoty ulož do `vizualni-historie/RRRR-MM-DD/` (viz sekce „Vizuální historie e-shopu" níže), nejen jako jednorázové ověření k zahození.
+1. Plné ověření (build, headless screenshot mobil ~375 i desktop ~1440 u vizuálních změn) — screenshoty ulož do `vizualni-historie/RRRR-MM-DD/` (viz `memory/vizualni-historie.md`), nejen jako jednorázové ověření k zahození.
 2. Jeden souhrnný zápis do `PAMET_PROJEKTU.md`.
-3. Aktualizace `CLAUDE.md` (Hotové funkce / MAPA, pokud se týká).
+3. Aktualizace `memory/hotove-funkce.md` a mapy `memory/mapa-projektu.md` (pokud se týká).
 4. Commit + push na GitHub.
 5. Regenerace veřejné nástěnky (gist + Pages).
 
 ### Vizuální historie e-shopu (`vizualni-historie/`)
-Screenshoty homepage a dalších vizuálně měněných stránek/komponent, ukládané v čase — aby šlo zpětně dohledat, jak web k danému datu vypadal.
-- Struktura: `vizualni-historie/RRRR-MM-DD/nazev-stranky-mobil.png` + `...-desktop.png` (mobil 375 px, desktop 1440 px).
-- Index všech záznamů: `vizualni-historie/INDEX.md` (tabulka datum → popis změny → soubory). Nový řádek při každém Režimu B s vizuální změnou.
-- **Kdy ukládat:** jen v Režimu B (uzavření) u vizuální/UI změny. V Režimu A (rychlá iterace) se historie needěla. Před rizikovou/nevratnou UI změnou (velký redesign, přepis komponenty) navíc "před" screenshot jako referenci.
-- **PNG soubory NEJSOU v Gitu** (`.gitignore`: `vizualni-historie/**/*.png`) — jen lokálně na disku, do Gitu jde pouze `INDEX.md`. Důvod: binárky v historii Gitu nejdou zase zmenšit smazáním (repo by trvale bobtnalo), zatímco textový index stačí k dohledání kontextu a je zálohovaný na GitHubu.
-- Úklid: staré screenshoty (3+ měsíce) se automaticky nemažou — jen upozornění Jirkovi při Režimu B, pokud složka přesáhne ~500 MB, ať se sám rozhodne.
-
-&gt; ⚠️ **Technické omezení (ověřeno 2026-07-04):** Automatické spuštění Režimu B po X minutách nečinnosti **není možné** — Claude Code nemá časovač/idle-hook, hooky (`SessionStart`, `PostToolUse`, `Stop`, ...) se spouští jen jako reakce na událost, ne na plynoucí čas bez aktivity. Proto se automatika řeší jen pojistkou (b) na startu session, ne časovačem. Zvažovaná alternativa (samostatný Windows background skript, co po tichu sám commituje) byla zamítnuta — uměl by jen mechanický commit s obecnou zprávou, ne kvalitní zápis do `PAMET_PROJEKTU.md`, a běžel by bez dozoru.
+Screenshoty mobil 375 / desktop 1440 se ukládají do `vizualni-historie/RRRR-MM-DD/` jen v Režimu B u vizuální změny, s novým řádkem ve `vizualni-historie/INDEX.md`; PNG nejsou v Gitu. Plná pravidla (a proč Režim B nejde spouštět časovačem po nečinnosti): `memory/vizualni-historie.md`.
 
 ### 1. Žádné ptaní na zbytečnosti
 Pokud uživatel říká "nastav mi Facebook reklamu na sluchátka" — UDĚLEJ TO.
@@ -249,24 +155,13 @@ Když najdu a opravím jakoukoliv chybu, NIKDY neskončím u pouhé opravy. Vžd
 6. **Commit + push** na GitHub
 
 ### 7. Carousel / promo bannery — obsah VŽDY celý uvnitř plochy (mobil i desktop)
-Slidy karuselu (`src/components/home/PromoCarousel.tsx`, `PS5PromoBanner.tsx`) musí mít **veškerý obsah celý vidět uvnitř plochy na VŠECH šířkách** — nic se nesmí ořezávat ani přetékat za levý/pravý/horní/dolní okraj.
-- **Výšku/poměr řeš JEDNOTNĚ na jednom místě** (viewport v `PromoCarousel`), ne v každém slidu zvlášť — ať se chyba nemůže vrátit u jednoho slidu.
-- Poměr **5/2 jen na sm+** (široká obrazovka). Na **mobilu výška PS5 slidu DYNAMICKÁ podle obsahu** (viz níže), dron slide má stejnou výšku jako PS5 (min. `DRONE_MOBILE_HEIGHT`), aby obsah pod karuselem při přepínání neposkakoval.
-- **2026-07-11 oprava — jedno pevné číslo na mobilu NESTAČÍ**: na šířkách **cca 320–480 px** (potvrzeno konkrétně na 320/360/390/430/480, testováno vzorkem 320–480 dle Kroku 5) se PS5 nadpis/text/výběr ovladačů zalamuje jinak podle šířky → různá skutečná potřebná výška obsahu, kterou jedno pevné číslo (dřív 560 px na všech mobilních šířkách) nemohlo pokrýt správně pro všechny — cena a tlačítka Detail/Koupit byly u některých šířek oříznuté mimo plochu bez možnosti scrollu. Oprava: `PromoCarousel.tsx` měří `scrollHeight` vnitřního obsahového divu `PS5PromoBanner.tsx` (přes `forwardRef` na `contentRef`, ne na kořen — scrollHeight vrátí přirozenou nezoříznutou výšku i když je div sám výškově omezený/overflow-hidden) a podle toho nastaví výšku kontejneru (`mobileHeight` state, `transition-[height]` pro plynulý přechod mezi slidy). **Od 2026-10-04 mají OBA slidy na mobilu STEJNOU výšku** = výška obsahu PS5, minimálně `DRONE_MOBILE_HEIGHT = 560` (dron se neměří — obrázek je `flex-1` a roztáhne se do toho, co dostane). Dřív měl dron pevných 560 px a při každém přepnutí slidu se výška měnila o 17–120 px → obsah pod karuselem poskakoval (opakované posuny rozvržení). Měří se vždy od 560 px bez animace výšky (jinak se karusel po otočení telefonu nezmenší); po `resize` až v dalším snímku. Jirka schválil, že dronový obrázek je na úzkých mobilech víc přiblížený.
-- **Drone banner je od 2026-06-21 ŽIVÝ** (HTML text, NE vypálený): obrázek `/drony-banner.webp` se ZÁMĚRNĚ ořezává tak, aby byla vidět jen pravá část s drony (vypálený text odříznut), levá strana = živý HTML text. Mobil: text nahoře / drony dole (img `w-[200%] object-right` → jen pravá polovina); sm+: text vlevo / drony vpravo (img `w-full object-right`). Okraje přelité do žluté (`#FBB816`). PS5 banner stále řeš dle potřeby.
-- Texty/tlačítka **responsivně zmenšovat** na mobilu.
-- **VŽDY ověřit na mobilní šířce (~375 px) i desktopu (~1440 px), oba slidy** — headless Edge screenshotem (kritérium kdy screenshotovat sám viz pravidlo 10 níže).
-
-### 9. Překlady — VŠE přes `t()`, vždy do všech 14 jazyků
-- **Žádný viditelný text napevno.** Každý nový text v UI (bannery, panely, tlačítka, aria-labely, hlášky) musí jít přes `t('klíč')` z `useLocalization`.
-- **Každý nový klíč přidej OKAMŽITĚ do všech 14 jazyků** — od 2026-10-03 jsou překlady v `src/i18n/locales/{cs,en,de,fr,es,it,pl,sk,hu,ro,nl,pt,sv,da}.json` (jeden soubor = jeden jazyk, načítá se jen zvolený). Přidání: `node scripts/add-i18n-key.cjs` (zapíše klíč do všech 14 souborů, odmítne když jazyk chybí). Ověření: `npx vitest run src/test/locales.test.ts` (všech 14 souborů má stejné klíče). `src/i18n/translations.ts` je už jen malý loader — překlady do něj NEPIŠ.
-- **Ceny vždy přes `formatPrice()`** (z `useLocalization`), nikdy natvrdo „Kč" — jinak se měna nepřepíná.
-- Živé bannery (`PS5PromoBanner`, `HeroBanners`) i pás dopravců (`ShippingBadges`) musí být plně přeložené.
-- **Pojistka:** `scripts/check-i18n.cjs` (v `.husky/pre-commit`) zablokuje commit, když do `.tsx` přidáš NOVÝ text napevno (JSX text nebo title/aria/placeholder/alt) s českou diakritikou. Kontroluje jen přidané řádky; allowlist: admin/legal/techhub-hry/i18n/data. Vědomé obejití: `SKIP_I18N_CHECK=1 git commit …`.
+Na žádné šířce se nesmí nic ořezávat ani přetékat. Výška/poměr se řeší JEN ve viewportu `PromoCarousel.tsx` (5/2 na sm+, na mobilu dynamicky podle obsahu PS5, oba slidy stejně vysoké). Po změně ověřit 375 i 1440 px, oba slidy. **Před úpravou karuselu nebo bannerů přečti `memory/pravidla-ui.md`** (přesný mechanismus měření výšky a historie oprav).
 
 ### 8. Flip karty a plovoucí prvky vs. obsah
-- **Otáčecí (flip) karty** (např. `techhub/PlayerCard.tsx`): když mají přední a zadní strana různě vysoký obsah, výška kontejneru musí odpovídat **AKTUÁLNĚ zobrazené straně** — ne max obou (zbyde prázdná mezera u kratší strany), ani fixní (ořez). Řešení: obě strany `position:absolute` přes sebe + měřit výšku obsahu aktivní strany (`useLayoutEffect` + `ResizeObserver` na vnitřním divu) a nastavit výšku kontejneru, s `transition: height`. Kontejner měj tmavé pozadí, ať během přechodu neprosvítá bílá. Nezaměňuj s grid-stackingem (ten drží max výšku → mezera).
-- **Plovoucí prvky** (scroll tlačítka vlevo dole, chatbot vpravo dole) **nesmí překrývat obsah patičky** — hlavně platební řádek. Nejspolehlivější: patičce dát spodní `padding-bottom` ≥ výšky zóny tlačítek (chatbot ~120 px), aby důležitý obsah skončil nad nimi. Platí mobil i desktop, i při zoomu 125 %.
+Flip karta: výška kontejneru podle AKTUÁLNĚ zobrazené strany (ne max obou, ne fixní). Plovoucí prvky nesmí překrývat obsah patičky, hlavně platební řádek. Řešení a detail: `memory/pravidla-ui.md`.
+
+### 9. Překlady — VŠE přes `t()`, vždy do všech 14 jazyků
+Žádný viditelný text napevno; nový klíč hned do všech 14 jazyků přes `node scripts/add-i18n-key.cjs`; ceny vždy přes `formatPrice()`. Commit hlídá `scripts/check-i18n.cjs`. Detail: `memory/i18n-pravidla.md`.
 
 ### 10. Ověření jednoduché UI změny — zeptat se uživatele, ne headless screenshotovat sám
 Po jednoduché/nízkorizikové vizuální změně (např. odebrání/přidání malého UI prvku) se NEMÁ sám pouštět do těžkého headless ověřování (instalace puppeteer, přihlašování, obcházení auth guardů v kódu jen kvůli screenshotu). Typecheck/build ověřit vždy sám (rychlé, bez rizika). U vizuálního výsledku se místo toho rovnou zeptat uživatele, jestli změna vypadá/funguje dobře — on to potvrdí, ušetří se tím čas i kredity.
@@ -297,6 +192,12 @@ Headless screenshot (mobil 375 / desktop 1440) si dělat sám JEN když:
 - **Nikdy `overflow-x: hidden`** na html/body/#root ani obalu stránky (rozbije sticky hlavičku) — používat `overflow-x-clip`.
 - **Odkaz na produkt** vždy `productPath(id)` z `lib/productUrl.ts`, nikdy `/product/${id}`.
 - **Startovní balík**: sonner, Radix toast/Dialog a framer-motion nesmí do startovního kódu (hlídá `scripts/check-bundle.cjs`).
+- **Supabase při startu** (kontexty, hooky v App/Header) jen přes `getSupabase()` z `integrations/supabase/lazy.ts`, ne přímý import `client.ts`; stránky a lazy komponenty mohou přímo.
+- **Hlášky** vždy `import { toast } from "@/lib/toast"`, nikdy přímo ze `sonner`.
+- **Náhodné UUID** vždy `uuid()` z `lib/uuid.ts`, nikdy `crypto.randomUUID` (na http://192.168.x.x chybí).
+- **Ceny**: přirážku nikdy nepočítat v komponentě (jen `lib/pricing.ts`, musí sedět s `_shared/orderPricing.ts`). Po změně `data/products.ts`/`bundles.ts`/`combos.ts` spustit `node scripts/gen-payment-catalog.cjs`; po ruční úpravě `data/products.ts` přepsat `STATIC_CATALOG_UPDATED_AT`.
+- **Nový plovoucí prvek** zapojit přes `lib/overlayGate.ts`; **měřicí kódy** jen přes `initPixels(getConsent())`.
+- **SEO**: každá veřejná stránka volá `useSeo`; v SEO a structured data vždy `SITE_URL`, nikdy `window.location.origin`. Výšku PS5 slidu `--promo-h` měnit jen spolu s `scripts/prerender-guard.cjs`.
 
 ### Git workflow (Lovable se NEPOUŽÍVÁ):
 - **Lokální verze na disku = jediný zdroj pravdy**, pracuje se ve VS Code
@@ -307,84 +208,8 @@ Headless screenshot (mobil 375 / desktop 1440) si dělat sám JEN když:
 
 ---
 
-## AUTOMATIZAČNÍ PLAYBOOK
-
-### Když dostanu "nastav reklamu na [produkt]":
-1. Vygeneruji 3 varianty reklamního textu (headline + body + CTA)
-2. Navrhnu targeting: věk, pohlaví, zájmy, lookalike audience
-3. Navrhnu rozpočet a bidding strategii
-4. Připravím UTM parametry pro tracking
-5. Napíšu přesný návod jak to nastavit v Meta Business Suite
-
-### Když dostanu "napiš emaily pro [situaci]":
-1. Vygeneruji kompletní email sekvenci (1-7 emailů)
-2. Každý email: předmět (A/B varianta), preheader, HTML tělo, CTA
-3. Navrhnu timing (kdy poslat po triggeru)
-4. Připravím segmentační podmínky
-5. Kód pro integraci do Resend/Klaviyo
-
-### Když dostanu "vytvoř obsah pro TikTok/Instagram":
-1. Navrhnu 5 video konceptů s hookem, dějem a CTA
-2. Napíšu kompletní skript (slovo od slova)
-3. Připravím hashtagy (mix viral + niche + branded)
-4. Navrhnu posting plán (dny + časy)
-5. Připravím caption s emoji
-
-### Když dostanu "oprav/přidej funkci do webu":
-1. Najdu relevantní soubory v repozitáři
-2. Napíšu kompletní kód změny
-3. Ukážu přesně KAM vložit (soubor + řádek)
-4. Připravím git commit message
-5. Ověřím že se nic nerozbilo
-
----
-
-## PRIORITNÍ FRONTY
-
-### Kritické (dělej první):
-1. Stripe platba — spustit `create-payment` Edge Function
-2. Produkty do Supabase — seed SQL
-3. Bezpečnost — API klíče do Vault
-
-### Důležité:
-1. Google Shopping / Heureka feed
-2. Comgate (CZ platby bez karty)
-3. Zásilkovna výběr místa v checkoutu
-4. Performance optimalizace (mobile 60% → 85%+)
-
-### Growth:
-1. Facebook Pixel + Conversions API
-2. TikTok Pixel
-3. Email automatizace (Klaviyo/Resend)
-4. Affiliate program
-
----
-
-## ŠABLONY
-
-### Facebook Ads — produktová reklama
-```
-HEADLINE (40 znaků): [Název produktu] – [Hlavní benefit]
-BODY (125 znaků): [Pain point]? [Produkt] [řeší to] za [cenu/čas]. Doprava zdarma nad 1500 Kč.
-CTA: Koupit nyní / Zjistit více / Získat slevu
-TARGETING: Věk 25-45, zájmy: [kategorie], online nakupování, technologie
-ROZPOČET: 200-500 Kč/den pro testování
-```
-
-### Email — opuštěný košík (3 emaily)
-```
-Email 1 (1h): "Zapomněl/a jste na něco? 🛒" — připomínka, žádný tlak
-Email 2 (24h): "Váš košík čeká + 5% sleva" — urgence + sleva
-Email 3 (72h): "Poslední šance – sleva vyprší dnes" — max urgence + social proof
-```
-
-### TikTok Hook šablony
-```
-Hook 1 (Problém): "Nikdo Vám neřekl, že [gadget] dokáže tohle..."
-Hook 2 (Šok): "Utratil jsem 50 000 Kč na [produkt] abyste nemuseli vy"
-Hook 3 (Výzva): "POV: Konečně jsi si koupil [produkt]"
-Hook 4 (Tutorial): "5 věcí které musíš vědět než koupíš [produkt]"
-```
+## MARKETING — PLAYBOOK A ŠABLONY
+Postupy pro reklamy, e-maily a obsah na sociální sítě, šablony (Facebook Ads, opuštěný košík, TikTok hooky) i staré prioritní fronty jsou v `memory/playbook-sablony.md`. Otevři ho, když přijde marketingový úkol.
 
 
 ---
@@ -395,6 +220,7 @@ Nový záznam přidávej NAHORU ve tvaru `- RRRR-MM-DD **Název**: co, kde, poji
 
 ## Hotové funkce
 
+- 2026-10-11 **Druhé zeštíhlení CLAUDE.md (39 → 18 kB)**: plná mapa do `memory/mapa-projektu.md`, detail pravidel 7 a 8 do `memory/pravidla-ui.md`, vizuální historie do `memory/vizualni-historie.md`, marketing do `memory/playbook-sablony.md`; v `CLAUDE.md` stručná mapa, shrnutí pravidel a rozšířená „Trvalá technická pravidla".
 - 2026-10-11 **Zeštíhlení CLAUDE.md**: historie hotových funkcí přesunuta sem, v `CLAUDE.md` zůstala mapa, pravidla a „Trvalá technická pravidla"; startup čte z deníku jen nejnovější záznam; veřejná stránka stavu se skládá z obou souborů (`scripts/gen-stav-page.cjs`).
 - 2026-10-11 **Animace podle auditu (4 kola)**: sdílené křivky `--ease-out`/`--ease-in-out`/`--ease-drawer`, stisk tlačítek, hover jen pro myš (`hoverOnlyWhenSupported`), ukazatele průběhu a kamion přes transform, `MotionConfig reducedMotion="user"`, doplněný pohyb při zavření chatu a cookie lišty. **Pravidla: žádné `transition-all` (použít `transition` nebo vyjmenované vlastnosti), neanimovat šířku/výšku, prvek odhalovaný hoverem musí mít zálohu pro dotyk `[@media(hover:none)]:opacity-100`, framer-motion mimo Tech Hub obalit `MotionConfig`.** Přehled v `plans/README.md`.
 - 2026-10-10 **Stránka 404** přeložená (14 jazyků, `notFound.*`) s hlavičkou a patičkou; Google feed `product-feed` v17 s novými adresami produktů. Doména webu je `premiumgadgets.eu` (všude).
