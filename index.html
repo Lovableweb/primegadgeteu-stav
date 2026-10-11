@@ -16,7 +16,7 @@
 </head>
 <body>
 <h1>PrimeGadget EU — stav projektu</h1>
-<p class="meta"><strong>Poslední aktualizace:</strong> 11. 10. 2026 20:38:24 (Europe/Prague)</p>
+<p class="meta"><strong>Poslední aktualizace:</strong> 11. 10. 2026 23:03:48 (Europe/Prague)</p>
 <pre>## NEŽ ZAČNEŠ HLEDAT
 **VŽDY nejdřív `memory/JAK-PRACUJEME.md` + `memory/DALSI-KROKY.md`** (rychlá vrstva 0, extrémně krátké). Podle typu úkolu pak `memory/INDEX.md` → příslušný tematický soubor (vrstva 1 mapa podle frekvence / vrstva 2 tematické moduly). Teprve pak — pokud to nestačí — stručná **MAPA PROJEKTU** níže, plná mapa `memory/mapa-projektu.md` a zbytek `CLAUDE.md`. Archiv (`memory/archiv-*.md`) čti jen na explicitní dotaz na historii. Když vytvoříš nový důležitý soubor, doplň ho do plné mapy `memory/mapa-projektu.md` (do stručné mapy níže jen když jde o často používané místo).
 
@@ -220,6 +220,7 @@ Nový záznam přidávej NAHORU ve tvaru `- RRRR-MM-DD **Název**: co, kde, poji
 
 ## Hotové funkce
 
+- 2026-10-11 **Čtení objednávek pro hlasového asistenta Jarvis**: migrace `20261011220000_jarvis_orders_readonly.sql` — dvě funkce jen pro čtení (přehled za období, poslední objednávky), pustí jen volajícího s tajným kódem (v DB je jen jeho otisk, schéma `private`), nevrací e-maily ani adresy. Zrušení přístupu: `delete from private.jarvis_access;`.
 - 2026-10-11 **Druhé zeštíhlení CLAUDE.md (39 → 18 kB)**: plná mapa do `memory/mapa-projektu.md`, detail pravidel 7 a 8 do `memory/pravidla-ui.md`, vizuální historie do `memory/vizualni-historie.md`, marketing do `memory/playbook-sablony.md`; v `CLAUDE.md` stručná mapa, shrnutí pravidel a rozšířená „Trvalá technická pravidla".
 - 2026-10-11 **Zeštíhlení CLAUDE.md**: historie hotových funkcí přesunuta sem, v `CLAUDE.md` zůstala mapa, pravidla a „Trvalá technická pravidla"; startup čte z deníku jen nejnovější záznam; veřejná stránka stavu se skládá z obou souborů (`scripts/gen-stav-page.cjs`).
 - 2026-10-11 **Animace podle auditu (4 kola)**: sdílené křivky `--ease-out`/`--ease-in-out`/`--ease-drawer`, stisk tlačítek, hover jen pro myš (`hoverOnlyWhenSupported`), ukazatele průběhu a kamion přes transform, `MotionConfig reducedMotion="user"`, doplněný pohyb při zavření chatu a cookie lišty. **Pravidla: žádné `transition-all` (použít `transition` nebo vyjmenované vlastnosti), neanimovat šířku/výšku, prvek odhalovaný hoverem musí mít zálohu pro dotyk `[@media(hover:none)]:opacity-100`, framer-motion mimo Tech Hub obalit `MotionConfig`.** Přehled v `plans/README.md`.
