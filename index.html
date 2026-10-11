@@ -16,14 +16,14 @@
 </head>
 <body>
 <h1>PrimeGadget EU — stav projektu</h1>
-<p class="meta"><strong>Poslední aktualizace:</strong> 11. 10. 2026 13:46:05 (Europe/Prague)</p>
+<p class="meta"><strong>Poslední aktualizace:</strong> 11. 10. 2026 20:22:47 (Europe/Prague)</p>
 <pre>## NEŽ ZAČNEŠ HLEDAT
 **VŽDY nejdřív `memory/JAK-PRACUJEME.md` + `memory/DALSI-KROKY.md`** (rychlá vrstva 0, extrémně krátké). Podle typu úkolu pak `memory/INDEX.md` → příslušný tematický soubor (vrstva 1 mapa podle frekvence / vrstva 2 tematické moduly). Teprve pak — pokud to nestačí — sekce **MAPA PROJEKTU** níže a zbytek `CLAUDE.md`. Archiv (`memory/archiv-*.md`) čti jen na explicitní dotaz na historii. Když vytvoříš nový důležitý soubor, doplň ho do mapy (`CLAUDE.md` i případně `memory/mapa-caste.md`/`mapa-vzacne.md`).
 
 ## PRVNÍ KROK KAŽDÉ SESSION (startup kontrola)
 Než cokoliv uděláš:
 1. `git pull origin main` — stáhni aktuální stav z GitHubu (i změny udělané z mobilu).
-2. Přečti `CLAUDE.md` (tenhle soubor) + `PAMET_PROJEKTU.md`, ať víš, co se změnilo.
+2. `CLAUDE.md` (tenhle soubor) už máš načtený. Z `PAMET_PROJEKTU.md` přečti JEN nejnovější záznam nahoře (prvních ~40 řádků) — celý soubor NEČTI, má přes 150 tisíc znaků; starší záznamy hledej přes Grep, až když jsou potřeba.
 3. Ověř dev server na `:8080` — pokud neběží, spusť (`npm run dev`), otevři http://localhost:8080.
 4. Zkontroluj `git status` — špinavý strom (neuzavřené změny z minulé session) = pojistka pro Režim B (viz pravidlo 0b): nejdřív dokonči uzavření té předchozí práce, teprve pak začni nový úkol.
 
@@ -31,12 +31,12 @@ Než cokoliv uděláš:
 Vedle CLAUDE.md je trvalý deník práce `PAMET_PROJEKTU.md` (nejnovější záznam nahoře). Platí NATRVALO:
 1. **Po dokončení Režimu B (uzavření) AUTOMATICKY přidej nový datovaný záznam** do `PAMET_PROJEKTU.md` (nejnovější nahoře): co se udělalo, které soubory, výsledek/poznámka. Nečekej na výzvu uživatele.
 2. **Po každém takovém zápisu rovnou `commit` + `push`** na GitHub.
-3. **Po větší změně aktualizuj i `CLAUDE.md`** (sekce „Hotové funkce" + případně MAPA).
+3. **Po větší změně přidej řádek do `memory/hotove-funkce.md`** (nejnovější nahoře) a případně uprav MAPU v `CLAUDE.md`. Do `CLAUDE.md` samotného patří jen to, co je potřeba při KAŽDÉ session (mapa, pravidla) — historie ne.
 
 ## Synchronizace a veřejný stav
 `CLAUDE.md` je zrcadlený na dvou veřejných místech, aby šel číst i z mobilu (obojí se řeší JEN v Režimu B, ne po každé drobné úpravě v Režimu A):
 - **Gist** (stálý raw odkaz): `gh gist edit $(cat .claude/sync-gist.txt) CLAUDE.md` — ID gistu v `.claude/sync-gist.txt`.
-- **GitHub Pages** — https://lovableweb.github.io/primegadgeteu-stav/. Hlavní repo `primegadgeteu` zůstává PRIVÁTNÍ; stránka je v SAMOSTATNÉM veřejném repu `Lovableweb/primegadgeteu-stav` (klon `../primegadgeteu-stav`), protože Pages na free plánu jde jen na veřejných repech. Generuje ji `scripts/gen-stav-page.cjs` z `CLAUDE.md`.
+- **GitHub Pages** — https://lovableweb.github.io/primegadgeteu-stav/. Hlavní repo `primegadgeteu` zůstává PRIVÁTNÍ; stránka je v SAMOSTATNÉM veřejném repu `Lovableweb/primegadgeteu-stav` (klon `../primegadgeteu-stav`), protože Pages na free plánu jde jen na veřejných repech. Generuje ji `scripts/gen-stav-page.cjs` z `CLAUDE.md` + `memory/hotove-funkce.md` (oba jsou tím pádem veřejné; gist nese jen `CLAUDE.md`).
 Obojí dělá AUTOMATICKY hook `.claude/hooks/push-claude-md.sh` po každém pushi ZE složky projektu + git `pre-push` hook (`scripts/sync-mirror.sh`) jako pojistka nezávislá na CWD (viz `memory/sync-nastenka.md` pro detaily a historii oprav). Ručně jen pokud hook selže.
 **POZOR: gist i stránka jsou VEŘEJNÉ** — do `CLAUDE.md` NIKDY nepatří hesla, API klíče ani tajemství. `.env` se NIKDY necommituje.
 
@@ -65,7 +65,6 @@ Rychlá orientace, ať se neprochází celý repo. Cesty jsou od kořene (`src/.
 ### Komponenty homepage (`src/components/home/` + `layout/`)
 - `home/PromoCarousel.tsx` — karusel promo bannerů; **výška/poměr slidů se řeší JEN tady** (viewport).
 - `home/PS5PromoBanner.tsx` — slide PlayStation 5 (živý HTML text + ovladače).
-- `home/DronePromoBanner.tsx` — slide DJI drony (živý text + rychlostní čáry + blikající CTA).
 - `home/HeroBanners.tsx`, `home/VideoBanner.tsx` — hero a video bannery (videa v `public/*.mp4` jsou zmenšená 480p bez zvuku, originály lokálně v `.video-orig/`; plakáty `public/posters/`).
 - `home/HotDeals.tsx`, `home/VisitorCounter.tsx` — bloky homepage (akce, počítadlo návštěv).
 - `home/ShippingBadges.tsx` — důvěryhodnostní pás dopravců pod hero (PPL, DHL, Zásilkovna, DPD; desktop 4 sloupce / mobil 2×2, bez placených log).
@@ -74,7 +73,7 @@ Rychlá orientace, ať se neprochází celý repo. Cesty jsou od kořene (`src/.
 - `layout/CurrencySwitcher.tsx` + `src/context/LocalizationContext.tsx` — přepínač měn a kurzy/symboly/formát ceny.
 - `layout/DeferredMenu.tsx` — menu v hlavičce (měna, jazyk) bez Radixu ve startu: tlačítko hned, Radix menu (`CurrencyMenu.tsx`/`LocaleMenu.tsx`) až při interakci. Úpravy položek menu dělat v `*Menu.tsx`, vzhled tlačítka v `*Switcher.tsx`.
 - `layout/LocaleSwitcher.tsx`, `layout/Clock.tsx`, `layout/ServerStatus.tsx` — jazyk, hodiny, stav serveru. (Rádio bylo 2026-10-04 na přání Jirky úplně odstraněno — přehrávač, ambientní autoplay v App.tsx, překlady `radio.*`, CSP pro SomaFM.)
-- **Běžné úkoly → sem sáhni:** úprava promo banneru → `home/PromoCarousel.tsx` + konkrétní slide (`PS5PromoBanner`/`DronePromoBanner`); měny → `layout/CurrencySwitcher.tsx` + `context/LocalizationContext.tsx`.
+- **Běžné úkoly → sem sáhni:** úprava promo banneru → `home/PromoCarousel.tsx` + konkrétní slide (`PS5PromoBanner`); měny → `layout/CurrencySwitcher.tsx` + `context/LocalizationContext.tsx`.
 
 ### AI / chatbot „Gadget" (`src/components/ai/`)
 - `AIShowman.tsx` — hlavní chatbot widget (AKTIVNÍ verze); sem pro chování/UI chatbota.
@@ -250,7 +249,7 @@ Když najdu a opravím jakoukoliv chybu, NIKDY neskončím u pouhé opravy. Vžd
 6. **Commit + push** na GitHub
 
 ### 7. Carousel / promo bannery — obsah VŽDY celý uvnitř plochy (mobil i desktop)
-Slidy karuselu (`src/components/home/PromoCarousel.tsx`, `PS5PromoBanner.tsx`, `DronePromoBanner.tsx`) musí mít **veškerý obsah celý vidět uvnitř plochy na VŠECH šířkách** — nic se nesmí ořezávat ani přetékat za levý/pravý/horní/dolní okraj.
+Slidy karuselu (`src/components/home/PromoCarousel.tsx`, `PS5PromoBanner.tsx`) musí mít **veškerý obsah celý vidět uvnitř plochy na VŠECH šířkách** — nic se nesmí ořezávat ani přetékat za levý/pravý/horní/dolní okraj.
 - **Výšku/poměr řeš JEDNOTNĚ na jednom místě** (viewport v `PromoCarousel`), ne v každém slidu zvlášť — ať se chyba nemůže vrátit u jednoho slidu.
 - Poměr **5/2 jen na sm+** (široká obrazovka). Na **mobilu výška PS5 slidu DYNAMICKÁ podle obsahu** (viz níže), dron slide má stejnou výšku jako PS5 (min. `DRONE_MOBILE_HEIGHT`), aby obsah pod karuselem při přepínání neposkakoval.
 - **2026-07-11 oprava — jedno pevné číslo na mobilu NESTAČÍ**: na šířkách **cca 320–480 px** (potvrzeno konkrétně na 320/360/390/430/480, testováno vzorkem 320–480 dle Kroku 5) se PS5 nadpis/text/výběr ovladačů zalamuje jinak podle šířky → různá skutečná potřebná výška obsahu, kterou jedno pevné číslo (dřív 560 px na všech mobilních šířkách) nemohlo pokrýt správně pro všechny — cena a tlačítka Detail/Koupit byly u některých šířek oříznuté mimo plochu bez možnosti scrollu. Oprava: `PromoCarousel.tsx` měří `scrollHeight` vnitřního obsahového divu `PS5PromoBanner.tsx` (přes `forwardRef` na `contentRef`, ne na kořen — scrollHeight vrátí přirozenou nezoříznutou výšku i když je div sám výškově omezený/overflow-hidden) a podle toho nastaví výšku kontejneru (`mobileHeight` state, `transition-[height]` pro plynulý přechod mezi slidy). **Od 2026-10-04 mají OBA slidy na mobilu STEJNOU výšku** = výška obsahu PS5, minimálně `DRONE_MOBILE_HEIGHT = 560` (dron se neměří — obrázek je `flex-1` a roztáhne se do toho, co dostane). Dřív měl dron pevných 560 px a při každém přepnutí slidu se výška měnila o 17–120 px → obsah pod karuselem poskakoval (opakované posuny rozvržení). Měří se vždy od 560 px bez animace výšky (jinak se karusel po otočení telefonu nezmenší); po `resize` až v dalším snímku. Jirka schválil, že dronový obrázek je na úzkých mobilech víc přiblížený.
@@ -262,7 +261,7 @@ Slidy karuselu (`src/components/home/PromoCarousel.tsx`, `PS5PromoBanner.tsx`, `
 - **Žádný viditelný text napevno.** Každý nový text v UI (bannery, panely, tlačítka, aria-labely, hlášky) musí jít přes `t('klíč')` z `useLocalization`.
 - **Každý nový klíč přidej OKAMŽITĚ do všech 14 jazyků** — od 2026-10-03 jsou překlady v `src/i18n/locales/{cs,en,de,fr,es,it,pl,sk,hu,ro,nl,pt,sv,da}.json` (jeden soubor = jeden jazyk, načítá se jen zvolený). Přidání: `node scripts/add-i18n-key.cjs` (zapíše klíč do všech 14 souborů, odmítne když jazyk chybí). Ověření: `npx vitest run src/test/locales.test.ts` (všech 14 souborů má stejné klíče). `src/i18n/translations.ts` je už jen malý loader — překlady do něj NEPIŠ.
 - **Ceny vždy přes `formatPrice()`** (z `useLocalization`), nikdy natvrdo „Kč" — jinak se měna nepřepíná.
-- Živé bannery (`PS5PromoBanner`, `DronePromoBanner`, `HeroBanners`) i pás dopravců (`ShippingBadges`) musí být plně přeložené.
+- Živé bannery (`PS5PromoBanner`, `HeroBanners`) i pás dopravců (`ShippingBadges`) musí být plně přeložené.
 - **Pojistka:** `scripts/check-i18n.cjs` (v `.husky/pre-commit`) zablokuje commit, když do `.tsx` přidáš NOVÝ text napevno (JSX text nebo title/aria/placeholder/alt) s českou diakritikou. Kontroluje jen přidané řádky; allowlist: admin/legal/techhub-hry/i18n/data. Vědomé obejití: `SKIP_I18N_CHECK=1 git commit …`.
 
 ### 8. Flip karty a plovoucí prvky vs. obsah
@@ -289,7 +288,114 @@ Headless screenshot (mobil 375 / desktop 1440) si dělat sám JEN když:
 **Trhy**: CZ (primární), SK, PL, EU expanze
 **Admin email**: (skryt z veřejného gistu — Claude ho zná z interní paměti)
 
-### Hotové funkce:
+### Hotové funkce
+Úplný datovaný seznam je v `memory/hotove-funkce.md`. **Nenačítá se automaticky** — otevři ho (nebo v něm hledej přes Grep), jen když potřebuješ vědět, jestli a jak je něco hotové. Nový záznam po větší změně piš TAM (nejnovější nahoře), ne sem. Sem patří jen trvalá pravidla níže.
+
+### Trvalá technická pravidla (vytažená z hotových funkcí)
+- **Animace**: žádné `transition-all` (použít `transition` nebo vyjmenované vlastnosti), neanimovat šířku/výšku (použít transform), prvek odhalovaný hoverem musí mít zálohu pro dotyk `[@media(hover:none)]:opacity-100`, framer-motion mimo Tech Hub obalit `MotionConfig reducedMotion="user"`. Přehled v `plans/README.md`.
+- **Šířka okna v JS** (matchMedia min-width) vždy přes `lib/phoneLayout.ts` (`breakpointMatches` / `isPhoneLayout`).
+- **Nikdy `overflow-x: hidden`** na html/body/#root ani obalu stránky (rozbije sticky hlavičku) — používat `overflow-x-clip`.
+- **Odkaz na produkt** vždy `productPath(id)` z `lib/productUrl.ts`, nikdy `/product/${id}`.
+- **Startovní balík**: sonner, Radix toast/Dialog a framer-motion nesmí do startovního kódu (hlídá `scripts/check-bundle.cjs`).
+
+### Git workflow (Lovable se NEPOUŽÍVÁ):
+- **Lokální verze na disku = jediný zdroj pravdy**, pracuje se ve VS Code
+- **GitHub = jen ZÁLOHA** — po hotové práci commit → push
+- Nikdo jiný do repa nepíše, takže `pull --rebase` kvůli Lovable už není potřeba
+- `.env` je v `.gitignore` — NIKDY nepushovat
+- Git identita: `Jiri Smaluch` (email nastaven lokálně, skryt z veřejného gistu)
+
+---
+
+## AUTOMATIZAČNÍ PLAYBOOK
+
+### Když dostanu "nastav reklamu na [produkt]":
+1. Vygeneruji 3 varianty reklamního textu (headline + body + CTA)
+2. Navrhnu targeting: věk, pohlaví, zájmy, lookalike audience
+3. Navrhnu rozpočet a bidding strategii
+4. Připravím UTM parametry pro tracking
+5. Napíšu přesný návod jak to nastavit v Meta Business Suite
+
+### Když dostanu "napiš emaily pro [situaci]":
+1. Vygeneruji kompletní email sekvenci (1-7 emailů)
+2. Každý email: předmět (A/B varianta), preheader, HTML tělo, CTA
+3. Navrhnu timing (kdy poslat po triggeru)
+4. Připravím segmentační podmínky
+5. Kód pro integraci do Resend/Klaviyo
+
+### Když dostanu "vytvoř obsah pro TikTok/Instagram":
+1. Navrhnu 5 video konceptů s hookem, dějem a CTA
+2. Napíšu kompletní skript (slovo od slova)
+3. Připravím hashtagy (mix viral + niche + branded)
+4. Navrhnu posting plán (dny + časy)
+5. Připravím caption s emoji
+
+### Když dostanu "oprav/přidej funkci do webu":
+1. Najdu relevantní soubory v repozitáři
+2. Napíšu kompletní kód změny
+3. Ukážu přesně KAM vložit (soubor + řádek)
+4. Připravím git commit message
+5. Ověřím že se nic nerozbilo
+
+---
+
+## PRIORITNÍ FRONTY
+
+### Kritické (dělej první):
+1. Stripe platba — spustit `create-payment` Edge Function
+2. Produkty do Supabase — seed SQL
+3. Bezpečnost — API klíče do Vault
+
+### Důležité:
+1. Google Shopping / Heureka feed
+2. Comgate (CZ platby bez karty)
+3. Zásilkovna výběr místa v checkoutu
+4. Performance optimalizace (mobile 60% → 85%+)
+
+### Growth:
+1. Facebook Pixel + Conversions API
+2. TikTok Pixel
+3. Email automatizace (Klaviyo/Resend)
+4. Affiliate program
+
+---
+
+## ŠABLONY
+
+### Facebook Ads — produktová reklama
+```
+HEADLINE (40 znaků): [Název produktu] – [Hlavní benefit]
+BODY (125 znaků): [Pain point]? [Produkt] [řeší to] za [cenu/čas]. Doprava zdarma nad 1500 Kč.
+CTA: Koupit nyní / Zjistit více / Získat slevu
+TARGETING: Věk 25-45, zájmy: [kategorie], online nakupování, technologie
+ROZPOČET: 200-500 Kč/den pro testování
+```
+
+### Email — opuštěný košík (3 emaily)
+```
+Email 1 (1h): "Zapomněl/a jste na něco? 🛒" — připomínka, žádný tlak
+Email 2 (24h): "Váš košík čeká + 5% sleva" — urgence + sleva
+Email 3 (72h): "Poslední šance – sleva vyprší dnes" — max urgence + social proof
+```
+
+### TikTok Hook šablony
+```
+Hook 1 (Problém): "Nikdo Vám neřekl, že [gadget] dokáže tohle..."
+Hook 2 (Šok): "Utratil jsem 50 000 Kč na [produkt] abyste nemuseli vy"
+Hook 3 (Výzva): "POV: Konečně jsi si koupil [produkt]"
+Hook 4 (Tutorial): "5 věcí které musíš vědět než koupíš [produkt]"
+```
+
+
+---
+
+**POZOR: tento soubor je VEŘEJNÝ** (zrcadlí se na GitHub Pages stránku stavu spolu s `CLAUDE.md`). Nikdy sem nepiš hesla, API klíče ani tajemství.
+
+Nový záznam přidávej NAHORU ve tvaru `- RRRR-MM-DD **Název**: co, kde, pojistka`. Trvalé pravidlo, které z funkce plyne, zapiš navíc do `CLAUDE.md` (oddíl „Trvalá technická pravidla").
+
+## Hotové funkce
+
+- 2026-10-11 **Zeštíhlení CLAUDE.md**: historie hotových funkcí přesunuta sem, v `CLAUDE.md` zůstala mapa, pravidla a „Trvalá technická pravidla"; startup čte z deníku jen nejnovější záznam; veřejná stránka stavu se skládá z obou souborů (`scripts/gen-stav-page.cjs`).
 - 2026-10-11 **Animace podle auditu (4 kola)**: sdílené křivky `--ease-out`/`--ease-in-out`/`--ease-drawer`, stisk tlačítek, hover jen pro myš (`hoverOnlyWhenSupported`), ukazatele průběhu a kamion přes transform, `MotionConfig reducedMotion="user"`, doplněný pohyb při zavření chatu a cookie lišty. **Pravidla: žádné `transition-all` (použít `transition` nebo vyjmenované vlastnosti), neanimovat šířku/výšku, prvek odhalovaný hoverem musí mít zálohu pro dotyk `[@media(hover:none)]:opacity-100`, framer-motion mimo Tech Hub obalit `MotionConfig`.** Přehled v `plans/README.md`.
 - 2026-10-10 **Stránka 404** přeložená (14 jazyků, `notFound.*`) s hlavičkou a patičkou; Google feed `product-feed` v17 s novými adresami produktů. Doména webu je `premiumgadgets.eu` (všude).
 - 2026-10-10 **Telefon = mobilní vzhled i ve „Stránkách pro počítače“**: skript v `index.html` pozná telefon podle zařízení (dotyk + obrazovka &lt; 600 px + na výšku) → `html.is-phone` + `zoom`; breakpointy sm/md/lg/xl/2xl platí jen bez `is-phone` (`postcss.config.js`). **Pravidlo: JS kontrola šířky okna (matchMedia min-width) vždy přes `lib/phoneLayout.ts` (`breakpointMatches` / `isPhoneLayout`).** PC beze změny.
@@ -386,94 +492,6 @@ Headless screenshot (mobil 375 / desktop 1440) si dělat sám JEN když:
 - 2026-07-06 **Produkty přeloženy do 14 jazyků — i18n KOMPLETNÍ** (poslední zbývající položka): všech 49 produktů z `data/products.ts` (popis u všech 49, název u 15 obecných produktů; u 34 značkových/modelových produktů — Samsung, Apple, PS5, Xbox, DJI, parfémy — název záměrně stejný ve všech jazycích, e-commerce konvence). 1372 nových klíčů `product.&lt;id&gt;.title`/`product.&lt;id&gt;.description` × 14. Nový hook `hooks/useLocalizedProduct.ts` zapojený do `ProductCard`/`ProductDetail`/`Compare`/`CompareCard`/`SalesBrainBot`/`ProductQuiz`/`HotDeals`/`BundleDeals`/`LiveSalesProof` — přes `ProductCard` se lokalizace automaticky protáhla i do košíku/pokladny. Mimo rozsah záměrně: admin, historické objednávky v `MyOrders` (název zůstává jak byl v okamžiku nákupu), interní AI kontext v `useChatApi.ts`. Ověřeno headless Edge screenshotem v angličtině. Detaily viz `PAMET_PROJEKTU.md` 2026-07-06.
 - 2026-07-06 **Kategorie a podkategorie přeloženy do 14 jazyků — i18n 100% KOMPLETNÍ**: hlavní kategorie (`category.&lt;id&gt;`, 8×) byly už hotové z dřívějška, doplněno 44 podkategorií (`subcategory.&lt;id&gt;` × 14 = 616 nových řádků). Zároveň opraveno reálné vykreslení: `MegaMenu.tsx` dřív zobrazoval podkategorie natvrdo česky a řádek „Vše z X" ignoroval i existující překlad kategorie — teď `t(\`subcategory.\${sub.id}\`)` a konečně využitý (dosud nepoužívaný) klíč `menu.showAll`. `Index.tsx` (`getCategoryName()`) opraven stejně — nadpis „Všechny produkty" u vybrané kategorie dřív ukazoval natvrdo češtinu bez ohledu na jazyk. Mimo rozsah: `Compare.tsx` (celá stránka historicky česky, samostatný úkol), SEO structured data (neviditelné pro uživatele). Detaily viz `PAMET_PROJEKTU.md` 2026-07-06.
 - 2026-07-06 **Kompletní systém pravidel — Režim A/B, HOTOVO+tabulka, navigační menu, revert, týdenní shrnutí, Jirkovy nápady**: pravidlo 0/0b zpřesněno (Režim A vždy výchozí, Režim B jen na klíčová slova nebo špinavý git status, přesná kritéria kdy se ptát předem, formát reportu „HOTOVO — ZMĚNA PROVEDENA" + tabulka), sloučeny 3 duplicitní sekce (startup, synchronizace), opraven rozbitý odkaz v pravidle 7. `memory/JAK-PRACUJEME.md` rozšířeno na plnou operační příručku (navigační menu „jdeme dělat úpravy", revert, týdenní shrnutí, odhad náročnosti, úklid paměti). Nové `memory/slovnicek.md` a `memory/JIRKOVY-NAPADY.md` (backlog nápadů/chyb). `memory/DALSI-KROKY.md` přepsáno na tabulku rozdělané práce + externí blokátory, uklizeny staré hotové položky. Detaily viz `PAMET_PROJEKTU.md` 2026-07-06. Zahrnuje i drobnou UI úpravu ikony košíku v hlavičce (černý skleněný kruh, brandová žlutozlatá ikona/badge, silnější obrys).
-
-### Git workflow (Lovable se NEPOUŽÍVÁ):
-- **Lokální verze na disku = jediný zdroj pravdy**, pracuje se ve VS Code
-- **GitHub = jen ZÁLOHA** — po hotové práci commit → push
-- Nikdo jiný do repa nepíše, takže `pull --rebase` kvůli Lovable už není potřeba
-- `.env` je v `.gitignore` — NIKDY nepushovat
-- Git identita: `Jiri Smaluch` (email nastaven lokálně, skryt z veřejného gistu)
-
----
-
-## AUTOMATIZAČNÍ PLAYBOOK
-
-### Když dostanu "nastav reklamu na [produkt]":
-1. Vygeneruji 3 varianty reklamního textu (headline + body + CTA)
-2. Navrhnu targeting: věk, pohlaví, zájmy, lookalike audience
-3. Navrhnu rozpočet a bidding strategii
-4. Připravím UTM parametry pro tracking
-5. Napíšu přesný návod jak to nastavit v Meta Business Suite
-
-### Když dostanu "napiš emaily pro [situaci]":
-1. Vygeneruji kompletní email sekvenci (1-7 emailů)
-2. Každý email: předmět (A/B varianta), preheader, HTML tělo, CTA
-3. Navrhnu timing (kdy poslat po triggeru)
-4. Připravím segmentační podmínky
-5. Kód pro integraci do Resend/Klaviyo
-
-### Když dostanu "vytvoř obsah pro TikTok/Instagram":
-1. Navrhnu 5 video konceptů s hookem, dějem a CTA
-2. Napíšu kompletní skript (slovo od slova)
-3. Připravím hashtagy (mix viral + niche + branded)
-4. Navrhnu posting plán (dny + časy)
-5. Připravím caption s emoji
-
-### Když dostanu "oprav/přidej funkci do webu":
-1. Najdu relevantní soubory v repozitáři
-2. Napíšu kompletní kód změny
-3. Ukážu přesně KAM vložit (soubor + řádek)
-4. Připravím git commit message
-5. Ověřím že se nic nerozbilo
-
----
-
-## PRIORITNÍ FRONTY
-
-### Kritické (dělej první):
-1. Stripe platba — spustit `create-payment` Edge Function
-2. Produkty do Supabase — seed SQL
-3. Bezpečnost — API klíče do Vault
-
-### Důležité:
-1. Google Shopping / Heureka feed
-2. Comgate (CZ platby bez karty)
-3. Zásilkovna výběr místa v checkoutu
-4. Performance optimalizace (mobile 60% → 85%+)
-
-### Growth:
-1. Facebook Pixel + Conversions API
-2. TikTok Pixel
-3. Email automatizace (Klaviyo/Resend)
-4. Affiliate program
-
----
-
-## ŠABLONY
-
-### Facebook Ads — produktová reklama
-```
-HEADLINE (40 znaků): [Název produktu] – [Hlavní benefit]
-BODY (125 znaků): [Pain point]? [Produkt] [řeší to] za [cenu/čas]. Doprava zdarma nad 1500 Kč.
-CTA: Koupit nyní / Zjistit více / Získat slevu
-TARGETING: Věk 25-45, zájmy: [kategorie], online nakupování, technologie
-ROZPOČET: 200-500 Kč/den pro testování
-```
-
-### Email — opuštěný košík (3 emaily)
-```
-Email 1 (1h): "Zapomněl/a jste na něco? 🛒" — připomínka, žádný tlak
-Email 2 (24h): "Váš košík čeká + 5% sleva" — urgence + sleva
-Email 3 (72h): "Poslední šance – sleva vyprší dnes" — max urgence + social proof
-```
-
-### TikTok Hook šablony
-```
-Hook 1 (Problém): "Nikdo Vám neřekl, že [gadget] dokáže tohle..."
-Hook 2 (Šok): "Utratil jsem 50 000 Kč na [produkt] abyste nemuseli vy"
-Hook 3 (Výzva): "POV: Konečně jsi si koupil [produkt]"
-Hook 4 (Tutorial): "5 věcí které musíš vědět než koupíš [produkt]"
-```
 </pre>
 </body>
 </html>
