@@ -16,7 +16,7 @@
 </head>
 <body>
 <h1>PrimeGadget EU — stav projektu</h1>
-<p class="meta"><strong>Poslední aktualizace:</strong> 12. 10. 2026 2:50:32 (Europe/Prague)</p>
+<p class="meta"><strong>Poslední aktualizace:</strong> 12. 10. 2026 3:43:32 (Europe/Prague)</p>
 <pre>## NEŽ ZAČNEŠ HLEDAT
 **VŽDY nejdřív `memory/JAK-PRACUJEME.md` + `memory/DALSI-KROKY.md`** (rychlá vrstva 0, extrémně krátké). Podle typu úkolu pak `memory/INDEX.md` → příslušný tematický soubor (vrstva 1 mapa podle frekvence / vrstva 2 tematické moduly). Teprve pak — pokud to nestačí — stručná **MAPA PROJEKTU** níže, plná mapa `memory/mapa-projektu.md` a zbytek `CLAUDE.md`. Archiv (`memory/archiv-*.md`) čti jen na explicitní dotaz na historii. Když vytvoříš nový důležitý soubor, doplň ho do plné mapy `memory/mapa-projektu.md` (do stručné mapy níže jen když jde o často používané místo).
 
@@ -221,6 +221,7 @@ Nový záznam přidávej NAHORU ve tvaru `- RRRR-MM-DD **Název**: co, kde, poji
 
 ## Hotové funkce
 
+- 2026-10-12 **Patička a hlavička — doladění**: barevné platební značky pod linkou a výraznější copyright (`layout/Footer.tsx`), lupa na telefonu první vlevo (`layout/Header.tsx`); stránka odstoupení ukáže pravdivou hlášku, když potvrzovací e-mail selže (`pages/legal/Withdrawal.tsx`, klíč `withdrawal.successNoEmail`).
 - 2026-10-12 **Balík úprav**: souhlas s cookies vyprší po 12 měsících (`lib/consent.ts`, test); sdílená místnost v chatbotu — viditelná chyba odeslání, vlastní zpráva hned, záložní dotahování, správná šířka na telefonu v režimu „Stránky pro počítače“ (`--phone-unzoom`); hlavička — ikony srovnávače a oblíbených, digitální hodiny s datem a kalendářem (`layout/Clock.tsx`); výraznější `/srovnat`; odstoupení od smlouvy — kulaté tlačítko v patičce (`components/home/WithdrawalButton.tsx`) + rozcestník `/odstoupeni` (`pages/legal/WithdrawalStart.tsx`).
 - 2026-10-11 **Změny přes hlasového asistenta Jarvis**: migrace `20261011233000_jarvis_shop_changes.sql` — funkce pro změnu ceny produktu, skladu a stavu objednávky (jen připravuje se / odesláno / doručeno / zrušeno). Zápis musí být zvlášť povolen, každá funkce ověřuje, že se hodnota od potvrzení nezměnila, a zapisuje do `private.jarvis_audit`. Hlasové potvrzení hlídá kód Jarvise. Pozor: v těchto funkcích nepoužívat chybový kód 40001 (PostgREST transakci opakuje donekonečna). Vypnutí zápisu: `update private.jarvis_access set can_write = false;`.
 - 2026-10-11 **Čtení objednávek pro hlasového asistenta Jarvis**: migrace `20261011220000_jarvis_orders_readonly.sql` — dvě funkce jen pro čtení (přehled za období, poslední objednávky), pustí jen volajícího s tajným kódem (v DB je jen jeho otisk, schéma `private`), nevrací e-maily ani adresy. Zrušení přístupu: `delete from private.jarvis_access;`.
