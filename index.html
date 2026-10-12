@@ -16,7 +16,7 @@
 </head>
 <body>
 <h1>PrimeGadget EU — stav projektu</h1>
-<p class="meta"><strong>Poslední aktualizace:</strong> 11. 10. 2026 23:31:27 (Europe/Prague)</p>
+<p class="meta"><strong>Poslední aktualizace:</strong> 12. 10. 2026 2:50:32 (Europe/Prague)</p>
 <pre>## NEŽ ZAČNEŠ HLEDAT
 **VŽDY nejdřív `memory/JAK-PRACUJEME.md` + `memory/DALSI-KROKY.md`** (rychlá vrstva 0, extrémně krátké). Podle typu úkolu pak `memory/INDEX.md` → příslušný tematický soubor (vrstva 1 mapa podle frekvence / vrstva 2 tematické moduly). Teprve pak — pokud to nestačí — stručná **MAPA PROJEKTU** níže, plná mapa `memory/mapa-projektu.md` a zbytek `CLAUDE.md`. Archiv (`memory/archiv-*.md`) čti jen na explicitní dotaz na historii. Když vytvoříš nový důležitý soubor, doplň ho do plné mapy `memory/mapa-projektu.md` (do stručné mapy níže jen když jde o často používané místo).
 
@@ -189,6 +189,7 @@ Headless screenshot (mobil 375 / desktop 1440) si dělat sám JEN když:
 ### Trvalá technická pravidla (vytažená z hotových funkcí)
 - **Animace**: žádné `transition-all` (použít `transition` nebo vyjmenované vlastnosti), neanimovat šířku/výšku (použít transform), prvek odhalovaný hoverem musí mít zálohu pro dotyk `[@media(hover:none)]:opacity-100`, framer-motion mimo Tech Hub obalit `MotionConfig reducedMotion="user"`. Přehled v `plans/README.md`.
 - **Šířka okna v JS** (matchMedia min-width) vždy přes `lib/phoneLayout.ts` (`breakpointMatches` / `isPhoneLayout`).
+- **Jednotky `vw`/`dvh` u plovoucích oken** (max. šířka/výška) vždy násobit `var(--phone-unzoom, 1)` — telefon v režimu „Stránky pro počítače“ má na `&lt;html&gt;` zoom (`index.html`) a bez přepočtu okno přeteče mimo obrazovku (místnost v chatbotu, 2026-10-12).
 - **Nikdy `overflow-x: hidden`** na html/body/#root ani obalu stránky (rozbije sticky hlavičku) — používat `overflow-x-clip`.
 - **Odkaz na produkt** vždy `productPath(id)` z `lib/productUrl.ts`, nikdy `/product/${id}`.
 - **Startovní balík**: sonner, Radix toast/Dialog a framer-motion nesmí do startovního kódu (hlídá `scripts/check-bundle.cjs`).
@@ -220,6 +221,7 @@ Nový záznam přidávej NAHORU ve tvaru `- RRRR-MM-DD **Název**: co, kde, poji
 
 ## Hotové funkce
 
+- 2026-10-12 **Balík úprav**: souhlas s cookies vyprší po 12 měsících (`lib/consent.ts`, test); sdílená místnost v chatbotu — viditelná chyba odeslání, vlastní zpráva hned, záložní dotahování, správná šířka na telefonu v režimu „Stránky pro počítače“ (`--phone-unzoom`); hlavička — ikony srovnávače a oblíbených, digitální hodiny s datem a kalendářem (`layout/Clock.tsx`); výraznější `/srovnat`; odstoupení od smlouvy — kulaté tlačítko v patičce (`components/home/WithdrawalButton.tsx`) + rozcestník `/odstoupeni` (`pages/legal/WithdrawalStart.tsx`).
 - 2026-10-11 **Změny přes hlasového asistenta Jarvis**: migrace `20261011233000_jarvis_shop_changes.sql` — funkce pro změnu ceny produktu, skladu a stavu objednávky (jen připravuje se / odesláno / doručeno / zrušeno). Zápis musí být zvlášť povolen, každá funkce ověřuje, že se hodnota od potvrzení nezměnila, a zapisuje do `private.jarvis_audit`. Hlasové potvrzení hlídá kód Jarvise. Pozor: v těchto funkcích nepoužívat chybový kód 40001 (PostgREST transakci opakuje donekonečna). Vypnutí zápisu: `update private.jarvis_access set can_write = false;`.
 - 2026-10-11 **Čtení objednávek pro hlasového asistenta Jarvis**: migrace `20261011220000_jarvis_orders_readonly.sql` — dvě funkce jen pro čtení (přehled za období, poslední objednávky), pustí jen volajícího s tajným kódem (v DB je jen jeho otisk, schéma `private`), nevrací e-maily ani adresy. Zrušení přístupu: `delete from private.jarvis_access;`.
 - 2026-10-11 **Druhé zeštíhlení CLAUDE.md (39 → 18 kB)**: plná mapa do `memory/mapa-projektu.md`, detail pravidel 7 a 8 do `memory/pravidla-ui.md`, vizuální historie do `memory/vizualni-historie.md`, marketing do `memory/playbook-sablony.md`; v `CLAUDE.md` stručná mapa, shrnutí pravidel a rozšířená „Trvalá technická pravidla".
