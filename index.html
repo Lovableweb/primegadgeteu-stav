@@ -16,7 +16,7 @@
 </head>
 <body>
 <h1>PrimeGadget EU — stav projektu</h1>
-<p class="meta"><strong>Poslední aktualizace:</strong> 12. 10. 2026 3:43:32 (Europe/Prague)</p>
+<p class="meta"><strong>Poslední aktualizace:</strong> 19. 10. 2026 22:13:44 (Europe/Prague)</p>
 <pre>## NEŽ ZAČNEŠ HLEDAT
 **VŽDY nejdřív `memory/JAK-PRACUJEME.md` + `memory/DALSI-KROKY.md`** (rychlá vrstva 0, extrémně krátké). Podle typu úkolu pak `memory/INDEX.md` → příslušný tematický soubor (vrstva 1 mapa podle frekvence / vrstva 2 tematické moduly). Teprve pak — pokud to nestačí — stručná **MAPA PROJEKTU** níže, plná mapa `memory/mapa-projektu.md` a zbytek `CLAUDE.md`. Archiv (`memory/archiv-*.md`) čti jen na explicitní dotaz na historii. Když vytvoříš nový důležitý soubor, doplň ho do plné mapy `memory/mapa-projektu.md` (do stručné mapy níže jen když jde o často používané místo).
 
@@ -176,6 +176,7 @@ Headless screenshot (mobil 375 / desktop 1440) si dělat sám JEN když:
 **Lokální cesta (JEDINÝ zdroj pravdy)**: `C:\Users\jiris\Projects\primegadgeteu\primegadgeteu-github-2026-05-30`
 **Dev server běží VŽDY z této složky** (`npm run dev` → http://localhost:8080). Jiná kopie projektu na disku NEEXISTUJE — pozor na cache prohlížeče, ne na „jiné úložiště".
 **GitHub**: https://github.com/Lovableweb/primegadgeteu.git
+**Doména**: `premiumgadgets.eu` (WEDOS, zřízena 12. 10. 2026, zaplacena do **12. 10. 2027**, zatím bez hostingu). Název webu pro zákazníky se píše **„Premium Gadgets"** jako doména — ne „PrimeGadget". Detail a snímky: `memory/domena.md`.
 **Stack**: React + Vite + TypeScript + Tailwind CSS + Supabase + shadcn/ui
 **Supabase projekt**: `obujmjhlxbbsztfivros` (vlastní projekt uživatele)
 **Supabase URL**: https://obujmjhlxbbsztfivros.supabase.co
@@ -220,6 +221,7 @@ Postupy pro reklamy, e-maily a obsah na sociální sítě, šablony (Facebook Ad
 Nový záznam přidávej NAHORU ve tvaru `- RRRR-MM-DD **Název**: co, kde, pojistka`. Trvalé pravidlo, které z funkce plyne, zapiš navíc do `CLAUDE.md` (oddíl „Trvalá technická pravidla").
 
 ## Hotové funkce
+- 2026-10-19 **Doména premiumgadgets.eu zapsaná do projektu** (WEDOS, zaplaceno do 12. 10. 2027, `memory/domena.md`); zbylé staré názvy „PrimeGadget(s)" pro zákazníky přepsané na „Premium Gadgets"/premiumgadgets.eu (ikona na ploše telefonu, sdílení doporučení ve 14 jazycích, uvítací hláška, odkaz v admin e-mailu).
 
 - 2026-10-12 **Patička a hlavička — doladění**: barevné platební značky pod linkou a výraznější copyright (`layout/Footer.tsx`), lupa na telefonu první vlevo (`layout/Header.tsx`); stránka odstoupení ukáže pravdivou hlášku, když potvrzovací e-mail selže (`pages/legal/Withdrawal.tsx`, klíč `withdrawal.successNoEmail`).
 - 2026-10-12 **Balík úprav**: souhlas s cookies vyprší po 12 měsících (`lib/consent.ts`, test); sdílená místnost v chatbotu — viditelná chyba odeslání, vlastní zpráva hned, záložní dotahování, správná šířka na telefonu v režimu „Stránky pro počítače“ (`--phone-unzoom`); hlavička — ikony srovnávače a oblíbených, digitální hodiny s datem a kalendářem (`layout/Clock.tsx`); výraznější `/srovnat`; odstoupení od smlouvy — kulaté tlačítko v patičce (`components/home/WithdrawalButton.tsx`) + rozcestník `/odstoupeni` (`pages/legal/WithdrawalStart.tsx`).
