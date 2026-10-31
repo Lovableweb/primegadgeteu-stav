@@ -16,7 +16,7 @@
 </head>
 <body>
 <h1>PrimeGadget EU — stav projektu</h1>
-<p class="meta"><strong>Poslední aktualizace:</strong> 19. 10. 2026 22:13:44 (Europe/Prague)</p>
+<p class="meta"><strong>Poslední aktualizace:</strong> 31. 10. 2026 1:42:16 (Europe/Prague)</p>
 <pre>## NEŽ ZAČNEŠ HLEDAT
 **VŽDY nejdřív `memory/JAK-PRACUJEME.md` + `memory/DALSI-KROKY.md`** (rychlá vrstva 0, extrémně krátké). Podle typu úkolu pak `memory/INDEX.md` → příslušný tematický soubor (vrstva 1 mapa podle frekvence / vrstva 2 tematické moduly). Teprve pak — pokud to nestačí — stručná **MAPA PROJEKTU** níže, plná mapa `memory/mapa-projektu.md` a zbytek `CLAUDE.md`. Archiv (`memory/archiv-*.md`) čti jen na explicitní dotaz na historii. Když vytvoříš nový důležitý soubor, doplň ho do plné mapy `memory/mapa-projektu.md` (do stručné mapy níže jen když jde o často používané místo).
 
@@ -29,9 +29,10 @@ Než cokoliv uděláš:
 
 ## 📓 DENÍK PROJEKTU `PAMET_PROJEKTU.md` — AUTOMATICKY, BEZ PŘIPOMÍNÁNÍ
 Vedle CLAUDE.md je trvalý deník práce `PAMET_PROJEKTU.md` (nejnovější záznam nahoře). Platí NATRVALO:
-1. **Po dokončení Režimu B (uzavření) AUTOMATICKY přidej nový datovaný záznam** do `PAMET_PROJEKTU.md` (nejnovější nahoře): co se udělalo, které soubory, výsledek/poznámka. Nečekej na výzvu uživatele.
-2. **Po každém takovém zápisu rovnou `commit` + `push`** na GitHub.
+1. **Po dokončení každého úkolu AUTOMATICKY přidej stručný datovaný předávací záznam** na začátek `PAMET_PROJEKTU.md`, i v Režimu A: co Jirka chtěl, co se změnilo, hlavní soubory, rozhodnutí, stav ověření a případné nedokončené kroky. Piš tak, aby další session mohla navázat bez hledání v celé historii. Nečekej na výzvu.
+2. **Při uzavření v Režimu B** záznam zkontroluj/doplň, ulož spolu se změnami a proveď `commit` + `push` na GitHub. Kód a předávací poznámka patří do stejného uzavření.
 3. **Po větší změně přidej řádek do `memory/hotove-funkce.md`** (nejnovější nahoře) a případně uprav mapu (`memory/mapa-projektu.md`). Do `CLAUDE.md` samotného patří jen to, co je potřeba při KAŽDÉ session (mapa, pravidla) — historie ne.
+4. Rozdělané úkoly a jejich aktuální stav průběžně veď v `memory/DALSI-KROKY.md`; po dokončení je odtud odstraň a shrnutí ponech v deníku. Komentáře ve zdrojovém kódu používej pro vysvětlení chování kódu, ne jako náhradu předávacího záznamu.
 
 ## Synchronizace a veřejný stav
 `CLAUDE.md` je zrcadlený na dvou veřejných místech, aby šel číst i z mobilu (obojí se řeší JEN v Režimu B, ne po každé drobné úpravě v Režimu A):
@@ -105,7 +106,7 @@ Jsi nejlepší dropshipping expert na světě. Ovládáš:
 **Režim A — VÝCHOZÍ VŽDY.** Na úpravu/změnu:
 1. Proveď požadovanou změnu v kódu celou, bez přerušení.
 2. Ověř, že nic nerozbilo build (typecheck / dev server bez chyby); u vizuální změny i reálné zobrazení dle pravidla 10. Při selhání buildu zkus opravit max 2×, pak nahlas problém (nezasekávej se v smyčce).
-   **NEDĚLEJ** automaticky plný screenshot mobil+desktop, **NEDĚLEJ** zápis do `PAMET_PROJEKTU.md`, **NEDĚLEJ** commit/push, **NEDĚLEJ** regeneraci veřejné nástěnky — tyhle kroky se dělají hromadně v Režimu B.
+   **NEDĚLEJ** automaticky plný screenshot mobil+desktop, **NEDĚLEJ** commit/push, **NEDĚLEJ** regeneraci veřejné nástěnky — tyhle kroky se dělají hromadně v Režimu B. Stručný předávací záznam do `PAMET_PROJEKTU.md` ale po dokončení úkolu přidej vždy (viz pravidlo Deníku výše).
 3. Napiš report ve formátu z `memory/JAK-PRACUJEME.md` (VELKÝMI PÍSMENY „HOTOVO — ZMĚNA PROVEDENA" + krátké shrnutí + seznam souborů + tabulka úkolů). Neptej se dál.
 
 **Výjimka — i v Režimu A se nikdy nepřeskakuje:**
