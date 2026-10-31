@@ -16,7 +16,7 @@
 </head>
 <body>
 <h1>PrimeGadget EU — stav projektu</h1>
-<p class="meta"><strong>Poslední aktualizace:</strong> 31. 10. 2026 1:42:16 (Europe/Prague)</p>
+<p class="meta"><strong>Poslední aktualizace:</strong> 31. 10. 2026 3:52:27 (Europe/Prague)</p>
 <pre>## NEŽ ZAČNEŠ HLEDAT
 **VŽDY nejdřív `memory/JAK-PRACUJEME.md` + `memory/DALSI-KROKY.md`** (rychlá vrstva 0, extrémně krátké). Podle typu úkolu pak `memory/INDEX.md` → příslušný tematický soubor (vrstva 1 mapa podle frekvence / vrstva 2 tematické moduly). Teprve pak — pokud to nestačí — stručná **MAPA PROJEKTU** níže, plná mapa `memory/mapa-projektu.md` a zbytek `CLAUDE.md`. Archiv (`memory/archiv-*.md`) čti jen na explicitní dotaz na historii. Když vytvoříš nový důležitý soubor, doplň ho do plné mapy `memory/mapa-projektu.md` (do stručné mapy níže jen když jde o často používané místo).
 
@@ -222,6 +222,13 @@ Postupy pro reklamy, e-maily a obsah na sociální sítě, šablony (Facebook Ad
 Nový záznam přidávej NAHORU ve tvaru `- RRRR-MM-DD **Název**: co, kde, pojistka`. Trvalé pravidlo, které z funkce plyne, zapiš navíc do `CLAUDE.md` (oddíl „Trvalá technická pravidla").
 
 ## Hotové funkce
+- 2026-10-31 **Obnovení černého vyhledávače**: vrácena tmavá výplň, světlý text a ikony v horní vyhledávací liště; rotující fialový okraj zachován (`components/layout/Header.tsx`, `index.css`). Ověření: TypeScript typecheck a cílený diff check.
+- 2026-10-31 **Bílé vyhledávání v horní liště**: zachován rotující fialový okraj; vnitřek lišty je světlý a text, placeholder i ovládací ikony mají kontrastní tmavé barvy (`components/layout/Header.tsx`, `index.css`). Ověření: TypeScript typecheck a cílený diff check.
+- 2026-10-31 **Vycentrování nadpisu katalogu**: černo-žlutý nadpis „Všechny produkty“ je vycentrován nad katalogem pomocí automatických bočních okrajů (`index.css`). Ověření: diff check.
+- 2026-10-31 **Přechod do celého katalogu**: kliknutí na „Všechny produkty“ v MegaMenu plynule sjede na nadpis a seznam produktů; nadpis používá odpovídající černo-žlutý vzhled (`pages/Index.tsx`, `index.css`). Ověření: typecheck a cílený diff check.
+- 2026-10-31 **Tlačítko Všechny produkty**: položka v `components/layout/MegaMenu.tsx` má černý podklad, žlutý okraj a stín s pohybem při hover/focus podle dodaného vzoru. Lokalizovaný text a výběr všech produktů zůstávají beze změny. Ověření: TypeScript typecheck a cílený diff check.
+- 2026-10-31 **Můj účet a objednávky — sjednocení s Tech Hubem**: modro-indigo-fialové hlavičky, ladící karty a formulářová pole, responzivní rozložení účtu a objednávek (`pages/Account.tsx`, `pages/MyOrders.tsx`, `index.css`). Ukládání profilu, přehled a akce objednávek zachovány. Ověření: TypeScript typecheck prošel; `git diff --check` upozorňuje na již existující whitespace v jiných souborech.
+- 2026-10-31 **Admin Dashboard — vizuální sjednocení s Tech Hubem**: gradientová hlavička, responzivní posuvná navigace 8 částí, zvýrazněné metriky a scoped styly panelů/tabulek pro světlý i tmavý režim (`pages/AdminDashboard.tsx`, `components/admin/AdminMetrics.tsx`, `index.css`). Datové a autentizační chování ponecháno. Ověření: typecheck a diff check.
 - 2026-10-19 **Doména premiumgadgets.eu zapsaná do projektu** (WEDOS, zaplaceno do 12. 10. 2027, `memory/domena.md`); zbylé staré názvy „PrimeGadget(s)" pro zákazníky přepsané na „Premium Gadgets"/premiumgadgets.eu (ikona na ploše telefonu, sdílení doporučení ve 14 jazycích, uvítací hláška, odkaz v admin e-mailu).
 
 - 2026-10-12 **Patička a hlavička — doladění**: barevné platební značky pod linkou a výraznější copyright (`layout/Footer.tsx`), lupa na telefonu první vlevo (`layout/Header.tsx`); stránka odstoupení ukáže pravdivou hlášku, když potvrzovací e-mail selže (`pages/legal/Withdrawal.tsx`, klíč `withdrawal.successNoEmail`).
