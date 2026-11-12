@@ -16,7 +16,7 @@
 </head>
 <body>
 <h1>PrimeGadget EU — stav projektu</h1>
-<p class="meta"><strong>Poslední aktualizace:</strong> 31. 10. 2026 3:52:27 (Europe/Prague)</p>
+<p class="meta"><strong>Poslední aktualizace:</strong> 12. 11. 2026 21:18:16 (Europe/Prague)</p>
 <pre>## NEŽ ZAČNEŠ HLEDAT
 **VŽDY nejdřív `memory/JAK-PRACUJEME.md` + `memory/DALSI-KROKY.md`** (rychlá vrstva 0, extrémně krátké). Podle typu úkolu pak `memory/INDEX.md` → příslušný tematický soubor (vrstva 1 mapa podle frekvence / vrstva 2 tematické moduly). Teprve pak — pokud to nestačí — stručná **MAPA PROJEKTU** níže, plná mapa `memory/mapa-projektu.md` a zbytek `CLAUDE.md`. Archiv (`memory/archiv-*.md`) čti jen na explicitní dotaz na historii. Když vytvoříš nový důležitý soubor, doplň ho do plné mapy `memory/mapa-projektu.md` (do stručné mapy níže jen když jde o často používané místo).
 
@@ -190,6 +190,7 @@ Headless screenshot (mobil 375 / desktop 1440) si dělat sám JEN když:
 
 ### Trvalá technická pravidla (vytažená z hotových funkcí)
 - **Animace**: žádné `transition-all` (použít `transition` nebo vyjmenované vlastnosti), neanimovat šířku/výšku (použít transform), prvek odhalovaný hoverem musí mít zálohu pro dotyk `[@media(hover:none)]:opacity-100`, framer-motion mimo Tech Hub obalit `MotionConfig reducedMotion="user"`. Přehled v `plans/README.md`.
+- **Kontrola typů** vždy `npm run typecheck` (= `tsc -p tsconfig.app.json`). Holé `npx tsc --noEmit` NEKONTROLUJE NIC (kořenový tsconfig má `"files": []`) — tím do 2026-11-12 proklouzly 4 chyby.
 - **Šířka okna v JS** (matchMedia min-width) vždy přes `lib/phoneLayout.ts` (`breakpointMatches` / `isPhoneLayout`).
 - **Jednotky `vw`/`dvh` u plovoucích oken** (max. šířka/výška) vždy násobit `var(--phone-unzoom, 1)` — telefon v režimu „Stránky pro počítače“ má na `&lt;html&gt;` zoom (`index.html`) a bez přepočtu okno přeteče mimo obrazovku (místnost v chatbotu, 2026-10-12).
 - **Nikdy `overflow-x: hidden`** na html/body/#root ani obalu stránky (rozbije sticky hlavičku) — používat `overflow-x-clip`.
